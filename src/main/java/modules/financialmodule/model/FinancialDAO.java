@@ -1,6 +1,6 @@
-package modules.model;
+package modules.financialmodule.model;
 
-import acces.GenerelDAO;
+import acces.GeneralDAO;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -167,7 +167,7 @@ public class FinancialDAO {
 
     private Connection getConnection() {
         if (this.connection == null) {
-            GenerelDAO dao = new GenerelDAO();
+            GeneralDAO dao = new GeneralDAO();
             return dao.getConnection();
         } else {
             return this.connection;

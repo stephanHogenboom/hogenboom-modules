@@ -4,8 +4,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import modules.FinancialModule;
-import modules.model.FinancialDAO;
+import modules.financialmodule.FinancialModule;
+import modules.financialmodule.model.FinancialDAO;
 
 import java.util.ArrayList;
 import java.util.Arrays;

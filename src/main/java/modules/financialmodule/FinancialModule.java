@@ -1,4 +1,4 @@
-package modules;
+package modules.financialmodule;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -13,9 +13,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import modules.model.Category;
-import modules.model.FinancialDAO;
-import modules.model.FinancialEntry;
+import modules.financialmodule.model.Category;
+import modules.financialmodule.model.FinancialDAO;
+import modules.financialmodule.model.FinancialEntry;
 import util.Validator;
 
 import java.time.LocalDateTime;
