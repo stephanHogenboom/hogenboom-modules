@@ -4,7 +4,7 @@ public class Category {
    private String name;
    private Integer id;
 
-    public Category(String name, Integer id) {
+    public Category(Integer id, String name) {
         this.name = name;
         this.id = id;
     }

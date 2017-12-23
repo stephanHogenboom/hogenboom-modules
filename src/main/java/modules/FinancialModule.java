@@ -69,7 +69,7 @@ public class FinancialModule {
 
         VBox pieAndBarChart = new VBox();
 
-        layout.setRight();
+      //  layout.setRight();
         Scene financialScreen = new Scene( layout );
         window.setScene( financialScreen );
         window.show();

@@ -8,4 +8,13 @@ public class Validator {
         }
         else return s.matches("-?\\d+(\\.\\d+)?");
     }
+
+    public void assertAllNotNull(Object... objects) {
+        for (Object obj : objects) {
+            if (obj == null) {
+                throw new IllegalStateException("Members of object cannot be null!");
+            }
+        }
+
+    }
 }

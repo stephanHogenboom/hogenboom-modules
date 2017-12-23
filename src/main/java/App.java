@@ -5,6 +5,9 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import modules.FinancialModule;
+import modules.model.Category;
+import modules.model.FinancialDAO;
+import modules.model.FinancialEntry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +18,7 @@ public class App extends Application {
     Stage window;
     Button moduleOneButton;
     Button menuButton;
-    List<String> buttonlist = new ArrayList<>( Arrays.asList( "Finacial", "Real estate" ) );
+    List<String> buttonlist = new ArrayList<>( Arrays.asList( "Finacial", "Real estate", "sql test" ) );
 
     public static void main(String... args) {
         //Start the window
@@ -51,6 +54,8 @@ public class App extends Application {
                 break;
             case "Real estate": goToRealEstateModule();
                 break;
+            case "sql test" : sqlTest();
+                break;
             default: goToFinancialModule();
         }
     }
@@ -62,5 +67,11 @@ public class App extends Application {
 
     private void goToRealEstateModule() {
         AlertBox.display( "Error", "Module doesnt exist yet." );
+    }
+
+    private void sqlTest() {
+        FinancialDAO dao = new FinancialDAO();
+        dao.createTableIfNotExist();
+        dao.insertEntry(new FinancialEntry(1, "blaat", 12.0, new Category("test", 1)));
     }
 }
