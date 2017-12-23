@@ -4,6 +4,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import modules.FinancialModule;
 
 public class App extends Application {
 
@@ -25,7 +26,7 @@ public class App extends Application {
         VBox layout = new VBox();
 
         moduleOneButton = new Button("to financial module");
-        moduleOneButton.setOnAction(e -> AlertBox.display("404", "module not implemented yet"));
+        moduleOneButton.setOnAction(e -> goToFinancialModule());
 
 
         layout.getChildren().add(moduleOneButton);
@@ -38,6 +39,7 @@ public class App extends Application {
 
 
     private void goToFinancialModule() {
-        //TODO
+        FinancialModule module = new FinancialModule();
+        module.display(window);
     }
 }
