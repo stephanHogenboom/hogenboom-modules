@@ -131,10 +131,12 @@ public class FinancialModule {
         }
         Double value = Double.parseDouble(valueString);
         Category category = new Category(1, categoryString);
-        FinancialEntry categorie = new FinancialEntry(dao.incrementAndGetId(), name, value, category);
-        table.getItems().add(categorie);
+        FinancialEntry entry = new FinancialEntry(dao.incrementAndGetId(), name, value, category);
+        table.getItems().add(entry);
+        dao.insertEntry(entry);
         if (!categories.getItems().contains(categoryString)) {
             categories.getItems().add(categoryString);
+            dao.insertCategorie(category);
         }
         return true;
 
