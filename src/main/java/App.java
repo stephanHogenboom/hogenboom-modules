@@ -5,9 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import modules.FinancialModule;
-import modules.model.Category;
 import modules.model.FinancialDAO;
-import modules.model.FinancialEntry;
 
 import java.util.ArrayList;
 import java.util.Arrays;

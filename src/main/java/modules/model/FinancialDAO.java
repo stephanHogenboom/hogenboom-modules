@@ -28,7 +28,7 @@ public class FinancialDAO {
     }
 
     public void createCategorieTableIfNotExist() {
-        String sql = "CREATE TABLE IF NOT EXISTS categorie (\n"
+        String sql = "CREATE TABLE IF NOT EXISTS category (\n"
                 + "	id integer PRIMARY KEY,\n"
                 + "	name text NOT NULL\n"
                 + ");";
@@ -114,8 +114,9 @@ public class FinancialDAO {
     }
 
     public Category getCategorie(String name) {
-        String sql = String.format("SELECT * FROM category where name = %s", name);
+        String sql = String.format("SELECT * FROM category where name = '%s'", name);
         try {
+            System.out.println(sql);
             Statement stmnt = connection.createStatement();
             ResultSet rs = stmnt.executeQuery(sql);
             if (rs.next()) {

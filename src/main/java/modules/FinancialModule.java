@@ -135,14 +135,18 @@ public class FinancialModule {
             return false;
         }
         Double value = Double.parseDouble(valueString);
-        Category category = new Category(dao.incrementAndGetId(CATEGORY_TABLE_NAME), categoryString);
-        FinancialEntry entry = new FinancialEntry(dao.incrementAndGetId(FINANCIAL_ENTRY_TABLE_NAME), name, value, category);
-        table.getItems().add(entry);
-        dao.insertEntry(entry);
+        FinancialEntry entry;
+        Category category;
         if (!categories.getItems().contains(categoryString)) {
             categories.getItems().add(categoryString);
-            dao.insertCategorie(category);
+            category = new Category(dao.incrementAndGetId(CATEGORY_TABLE_NAME), categoryString);
+        } else {
+            category = dao.getCategorie(categoryString);
         }
+        entry = new FinancialEntry(dao.incrementAndGetId(FINANCIAL_ENTRY_TABLE_NAME), name, value, category);
+        table.getItems().add(entry);
+        dao.insertEntry(entry);
+        dao.insertCategorie(category);
         return true;
 
     }
