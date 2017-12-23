@@ -6,10 +6,15 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import modules.FinancialModule;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class App extends Application {
 
     Stage window;
     Button moduleOneButton;
+    Button menuButton;
 
     public static void main(String... args) {
         //Start the window
@@ -19,27 +24,45 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         window = primaryStage;
-        window.setTitle("modules application");
-
+        window.setTitle( "modules application" );
+        window.setWidth( 500 );
+        window.setHeight( 500 );
 
         // create layout
         VBox layout = new VBox();
 
-        moduleOneButton = new Button("to financial module");
-        moduleOneButton.setOnAction(e -> goToFinancialModule());
+        // button lists
+        List<String> buttonlist = new ArrayList<>( Arrays.asList( "Finacial", "Real estate" ) );
 
+        for( String button : buttonlist ){
+            menuButton = new Button( button );
+            menuButton.setOnAction( e -> getModuleAction( button ) );
+            layout.getChildren().add( menuButton );
+        }
 
-        layout.getChildren().add(moduleOneButton);
         //create scene
-        Scene scene = new Scene(layout);
+        Scene scene = new Scene( layout );
 
         window.setScene(scene);
         window.show();
     }
 
+    private void getModuleAction( String action ) {
+        switch( action ){
+            case "Financial": goToFinancialModule();
+                break;
+            case "Real estate": goToRealEstateModule();
+                break;
+            default: goToFinancialModule();
+        }
+    }
 
     private void goToFinancialModule() {
         FinancialModule module = new FinancialModule();
         module.display(window);
+    }
+
+    private void goToRealEstateModule() {
+        AlertBox.display("Error", "Module doesnt exist yet.");
     }
 }
