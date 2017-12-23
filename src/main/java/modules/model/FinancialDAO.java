@@ -59,7 +59,6 @@ public class FinancialDAO {
     public boolean insertEntry(FinancialEntry entry) {
         String sql = "INSERT INTO financial_entry VALUES(?,?,?,?,?)";
         boolean flag = false;
-        System.out.println(entry.getName());
         try {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, entry.getId());
@@ -94,9 +93,6 @@ public class FinancialDAO {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             e.printStackTrace();
-        }
-        for (FinancialEntry entry : financialEntries) {
-            System.out.println(entry.getName());
         }
         return financialEntries;
     }
