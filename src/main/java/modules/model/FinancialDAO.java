@@ -121,7 +121,7 @@ public class FinancialDAO {
             if (rs.next()) {
                 return new Category(rs.getInt(1), rs.getString(2));
             } else {
-                System.out.println("no cat found for ID : " + id);
+                System.out.println("no name found for name : " + name);
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
