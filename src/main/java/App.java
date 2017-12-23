@@ -19,9 +19,14 @@ public class App extends Application {
     Button moduleOneButton;
     Button menuButton;
     List<String> buttonlist = new ArrayList<>( Arrays.asList( "Finacial", "Real estate", "sql test" ) );
+    FinancialDAO dao = new FinancialDAO();
 
     public static void main(String... args) {
+        FinancialDAO dao = new FinancialDAO();
+        dao.createEntryTableIfNotExist();
+        dao.createCategorieTableIfNotExist();
         //Start the window
+
         launch(args);
     }
 
@@ -70,9 +75,6 @@ public class App extends Application {
     }
 
     private void sqlTest() {
-        FinancialDAO dao = new FinancialDAO();
-        dao.createEntryTableIfNotExist();
-        dao.createCategorieTableIfNotExist();
         dao.insertCategorie(new Category(1, "test"));
         dao.insertEntry(new FinancialEntry(1, "blaat", 12.0, new Category(1, "test")));
     }
