@@ -31,7 +31,7 @@ public class App extends Application {
 
         // create layout
         VBox layout = new VBox();
-        
+
         for( String button : buttonlist ){
             menuButton = new Button( button );
             menuButton.setOnAction( e -> getModuleAction( button ) );
@@ -61,6 +61,6 @@ public class App extends Application {
     }
 
     private void goToRealEstateModule() {
-        AlertBox.display("Error", "Module doesnt exist yet.");
+        AlertBox.display( "Error", "Module doesnt exist yet." );
     }
 }

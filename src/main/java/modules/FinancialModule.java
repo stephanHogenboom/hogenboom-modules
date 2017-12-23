@@ -27,15 +27,12 @@ public class FinancialModule {
 
     public void display(Stage primaryStage) {
         window = primaryStage;
-        window.setMinWidth(500);
-        window.setMaxHeight(500);
-
-
+        window.setMinWidth( 500 );
+        window.setMaxHeight( 500 );
+        window.setTitle( "Financial app" );
 
         BorderPane layout = new BorderPane();
-
         VBox excellLayout = new VBox();
-
 
         //name column
         TableColumn<FinancialEntry, String> nameColumn = addColumn("name");
@@ -46,14 +43,10 @@ public class FinancialModule {
         //DateColumn
         TableColumn<FinancialEntry, LocalDateTime> dateColumn = addColumn("date");
 
-
         //initializeTable
         table = new TableView<>();
         table.setItems(getFinancialEntries());
         table.getColumns().addAll(nameColumn, categoryColumn, valueColumn, dateColumn);
-
-
-        HBox inputAndButtonsBox = new HBox();
 
         nameInput = new TextField();
         nameInput.setPromptText("name");
@@ -65,17 +58,20 @@ public class FinancialModule {
         categories.setEditable(true);
         categories.setPromptText("category");
 
-
-        /* create buttons
-         */
         addButton = new Button("add");
         addButton.setOnAction(e -> addEntry());
 
-        inputAndButtonsBox.getChildren().addAll(nameInput, categories, valueInput, addButton);
-        excellLayout.getChildren().addAll(table, inputAndButtonsBox);
-        layout.setCenter(excellLayout);
-        Scene financialScreen = new Scene(layout);
-        window.setScene(financialScreen);
+        HBox inputAndButtonsBox = new HBox();
+        inputAndButtonsBox.getChildren().addAll( nameInput, categories, valueInput, addButton );
+
+        excellLayout.getChildren().addAll( table, inputAndButtonsBox );
+        layout.setCenter( excellLayout );
+
+        VBox pieAndBarChart = new VBox();
+
+        layout.setRight();
+        Scene financialScreen = new Scene( layout );
+        window.setScene( financialScreen );
         window.show();
     }
 
@@ -88,7 +84,7 @@ public class FinancialModule {
 
     private ObservableList<FinancialEntry> getFinancialEntries() {
         ObservableList<FinancialEntry> entries = FXCollections.observableArrayList();
-        entries.add(new FinancialEntry(1, "test",  new Double(200.0) , new Category("test", 1)));
+        entries.add( new FinancialEntry(1, "test",  new Double(200.0) , new Category("test", 1)));
         return entries;
     }
 
