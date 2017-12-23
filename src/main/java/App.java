@@ -6,6 +6,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import modules.financialmodule.FinancialModule;
 import modules.financialmodule.model.FinancialDAO;
+import modules.realestate.RealEstateModule;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,6 +68,7 @@ public class App extends Application {
     }
 
     private void goToRealEstateModule() {
-        AlertBox.display( "Error", "Module doesnt exist yet." );
+        RealEstateModule module = new RealEstateModule();
+        module.display(window);
     }
 }
