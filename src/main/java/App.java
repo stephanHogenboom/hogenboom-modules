@@ -15,6 +15,7 @@ public class App extends Application {
     Stage window;
     Button moduleOneButton;
     Button menuButton;
+    List<String> buttonlist = new ArrayList<>( Arrays.asList( "Finacial", "Real estate" ) );
 
     public static void main(String... args) {
         //Start the window
@@ -30,10 +31,7 @@ public class App extends Application {
 
         // create layout
         VBox layout = new VBox();
-
-        // button lists
-        List<String> buttonlist = new ArrayList<>( Arrays.asList( "Finacial", "Real estate" ) );
-
+        
         for( String button : buttonlist ){
             menuButton = new Button( button );
             menuButton.setOnAction( e -> getModuleAction( button ) );
