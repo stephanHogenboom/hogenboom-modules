@@ -1,5 +1,7 @@
 package modules;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import elements.AlertBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,6 +20,7 @@ import util.Validator;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class FinancialModule {
 
@@ -148,15 +151,32 @@ public class FinancialModule {
 
         // TODO: get the actual values from the database -> category -> percentage
 
+        ArrayList<FinancialEntry> entries = dao.getAllFinancialEntries();
+        ArrayList<Category> categories    = dao.getAllCategories();
+
+        Multimap<String, FinancialEntry> entryByCategory = ArrayListMultimap.create();
+        ArrayList<PieChart.Data> dataList = new ArrayList<>();
+        for ( FinancialEntry entry : entries){
+            System.out.println("name =" + entry.getName());
+            System.out.println("categorie =" + entry.getCategory());
+            entryByCategory.put(entry.getCategory().getName(), entry);
+        }
+
+        for( Category category : categories ){
+            Collection<FinancialEntry> entrylistOfCategory = entryByCategory.get(category.getName());
+            double totalValue = 0;
+
+            for( FinancialEntry entry : entrylistOfCategory){
+                totalValue += entry.getValue();
+            }
+            dataList.add(new PieChart.Data(category.getName(), totalValue));
+        }
+
         ObservableList<PieChart.Data> pieChartData =
                 FXCollections.observableArrayList(
-                        new PieChart.Data("Grapefruit", 13),
-                        new PieChart.Data("Oranges", 25),
-                        new PieChart.Data("Plums", 10),
-                        new PieChart.Data("Pears", 22),
-                        new PieChart.Data("Apples", 30));
+                        dataList);
         final PieChart chart = new PieChart( pieChartData );
-        chart.setTitle("");
+        chart.setTitle( "Monthly overview" );
         return chart;
     }
 
