@@ -3,16 +3,26 @@ package modules.model;
 import java.time.LocalDateTime;
 
 public class FinancialEntry {
+    private Integer id;
     private String name;
     private Double value;
     private Category category;
     private LocalDateTime date;
 
-    public FinancialEntry(String name, Double value, Category category) {
+    public FinancialEntry(Integer id, String name, Double value, Category category) {
+        this.id =id;
         this.name = name;
         this.value = value;
         this.category = category;
         this.date = LocalDateTime.now();
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
