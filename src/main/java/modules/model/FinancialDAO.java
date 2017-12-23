@@ -7,10 +7,12 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class FinancialDAO {
-    private GenerelDAO dao = new GenerelDAO();
+    private final Connection connection = getConnection();
+
+
 
     public void createEntryTableIfNotExist() {
-        Connection con = dao.getConnection();
+        Connection con = connection;
         String sql = "CREATE TABLE IF NOT EXISTS financial_entry (\n"
                 + "	id integer PRIMARY KEY,\n"
                 + "	name text NOT NULL,\n"
@@ -28,7 +30,7 @@ public class FinancialDAO {
     }
 
     public void createCategorieTableIfNotExist() {
-        Connection con = dao.getConnection();
+        Connection con = connection;
         String sql = "CREATE TABLE IF NOT EXISTS categorie (\n"
                 + "	id integer PRIMARY KEY,\n"
                 + "	name text NOT NULL\n"
@@ -43,7 +45,7 @@ public class FinancialDAO {
     }
 
     public boolean insertCategorie(Category categorie) {
-        Connection con = dao.getConnection();
+        Connection con = connection;
         String sql = "INSERT INTO categorie VALUES(?,?)";
         boolean flag = false;
         try {
@@ -58,15 +60,16 @@ public class FinancialDAO {
     }
 
     public boolean insertEntry(FinancialEntry entry) {
-        Connection con = dao.getConnection();
+        Connection con = connection;
         String sql = "INSERT INTO financial_entry VALUES(?,?,?,?,?)";
         boolean flag = false;
+        System.out.println(entry.getName());
         try {
             PreparedStatement statement = con.prepareStatement(sql);
             statement.setInt(1, entry.getId());
             statement.setString(2, entry.getName());
-            statement.setInt(3, entry.getCategory().getId());
-            statement.setDouble(4, entry.getValue());
+            statement.setDouble(3, entry.getValue());
+            statement.setInt(4, entry.getCategory().getId());
             statement.setString(5, entry.getDate().toString());
             flag = statement.execute();
         } catch (SQLException e) {
@@ -76,7 +79,7 @@ public class FinancialDAO {
     }
 
     public ArrayList<FinancialEntry> getAllFinancialEntries() {
-        Connection con = dao.getConnection();
+        Connection con = connection;
         ArrayList<FinancialEntry> financialEntries = new ArrayList<>();
         String sql = "SELECT * FROM financial_entry";
         try {
@@ -97,11 +100,14 @@ public class FinancialDAO {
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
+        for (FinancialEntry entry : financialEntries) {
+            System.out.println(entry.getName());
+        }
         return financialEntries;
     }
 
     public Category getCategorie(int id) {
-        Connection con = dao.getConnection();
+        Connection con = connection;
         String sql = String.format("SELECT * FROM categorie where id = %s", id);
         try {
             Statement stmnt = con.createStatement();
@@ -117,13 +123,14 @@ public class FinancialDAO {
         return null;
     }
 
-    public Integer incrementAndGetId() {
-        Connection con = dao.getConnection();
-        String sql = "SELECT max(id) FROM categorie";
+    public Integer incrementAndGetId(String name) {
+        Connection con = connection;
+        String sql = String.format("SELECT max(id) FROM %s", name);
         try {
             Statement stmnt = con.createStatement();
             ResultSet rs = stmnt.executeQuery(sql);
             if (rs.next()) {
+                System.out.println(rs.getInt(1));
                 return rs.getInt(1) + 1;
             } else return 1;
         } catch (SQLException e) {
@@ -134,7 +141,7 @@ public class FinancialDAO {
     }
 
     public ArrayList<Category> getAllCategories() {
-        Connection con = dao.getConnection();
+        Connection con = connection;
         ArrayList<Category> categories = new ArrayList<>();
         String sql = "SELECT * FROM categorie";
         try {
@@ -149,5 +156,14 @@ public class FinancialDAO {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private Connection getConnection() {
+        if (this.connection == null) {
+            GenerelDAO dao = new GenerelDAO();
+            return dao.getConnection();
+        } else {
+            return this.connection;
+        }
     }
 }

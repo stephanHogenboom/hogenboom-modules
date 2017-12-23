@@ -28,6 +28,8 @@ public class FinancialModule {
     ComboBox<String> categories;
     Validator validator = new Validator();
     FinancialDAO dao = new FinancialDAO();
+    private final String FINANCIAL_ENTRY_TABLE_NAME = "financial_entry";
+    private final String CATEGORY_TABLE_NAME = "categorie";
 
     public void display(Stage primaryStage) {
         window = primaryStage;
@@ -130,8 +132,8 @@ public class FinancialModule {
             return false;
         }
         Double value = Double.parseDouble(valueString);
-        Category category = new Category(1, categoryString);
-        FinancialEntry entry = new FinancialEntry(dao.incrementAndGetId(), name, value, category);
+        Category category = new Category(dao.incrementAndGetId(CATEGORY_TABLE_NAME), categoryString);
+        FinancialEntry entry = new FinancialEntry(dao.incrementAndGetId(FINANCIAL_ENTRY_TABLE_NAME), name, value, category);
         table.getItems().add(entry);
         dao.insertEntry(entry);
         if (!categories.getItems().contains(categoryString)) {
