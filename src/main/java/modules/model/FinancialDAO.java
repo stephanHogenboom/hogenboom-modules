@@ -12,7 +12,6 @@ public class FinancialDAO {
 
 
     public void createEntryTableIfNotExist() {
-        Connection con = connection;
         String sql = "CREATE TABLE IF NOT EXISTS financial_entry (\n"
                 + "	id integer PRIMARY KEY,\n"
                 + "	name text NOT NULL,\n"
@@ -21,7 +20,7 @@ public class FinancialDAO {
                 + " timestamp TEXT"
                 + ");";
         try {
-            Statement statement = con.createStatement();
+            Statement statement = connection.createStatement();
             statement.execute(sql);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -30,13 +29,12 @@ public class FinancialDAO {
     }
 
     public void createCategorieTableIfNotExist() {
-        Connection con = connection;
         String sql = "CREATE TABLE IF NOT EXISTS categorie (\n"
                 + "	id integer PRIMARY KEY,\n"
                 + "	name text NOT NULL\n"
                 + ");";
         try {
-            Statement statement = con.createStatement();
+            Statement statement = connection.createStatement();
             statement.execute(sql);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -45,11 +43,10 @@ public class FinancialDAO {
     }
 
     public boolean insertCategorie(Category categorie) {
-        Connection con = connection;
         String sql = "INSERT INTO categorie VALUES(?,?)";
         boolean flag = false;
         try {
-            PreparedStatement statement = con.prepareStatement(sql);
+            PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, categorie.getId());
             statement.setString(2, categorie.getName());
             flag = statement.execute();
@@ -60,12 +57,11 @@ public class FinancialDAO {
     }
 
     public boolean insertEntry(FinancialEntry entry) {
-        Connection con = connection;
         String sql = "INSERT INTO financial_entry VALUES(?,?,?,?,?)";
         boolean flag = false;
         System.out.println(entry.getName());
         try {
-            PreparedStatement statement = con.prepareStatement(sql);
+            PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, entry.getId());
             statement.setString(2, entry.getName());
             statement.setDouble(3, entry.getValue());
@@ -79,11 +75,10 @@ public class FinancialDAO {
     }
 
     public ArrayList<FinancialEntry> getAllFinancialEntries() {
-        Connection con = connection;
         ArrayList<FinancialEntry> financialEntries = new ArrayList<>();
         String sql = "SELECT * FROM financial_entry";
         try {
-            Statement statement = con.createStatement();
+            Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
                 FinancialEntryBuilder bldr = new FinancialEntryBuilder();
@@ -107,10 +102,9 @@ public class FinancialDAO {
     }
 
     public Category getCategorie(int id) {
-        Connection con = connection;
         String sql = String.format("SELECT * FROM categorie where id = %s", id);
         try {
-            Statement stmnt = con.createStatement();
+            Statement stmnt = connection.createStatement();
             ResultSet rs = stmnt.executeQuery(sql);
             if (rs.next()) {
                 return new Category(rs.getInt(1), rs.getString(2));
@@ -124,10 +118,9 @@ public class FinancialDAO {
     }
 
     public Integer incrementAndGetId(String name) {
-        Connection con = connection;
         String sql = String.format("SELECT max(id) FROM %s", name);
         try {
-            Statement stmnt = con.createStatement();
+            Statement stmnt = connection.createStatement();
             ResultSet rs = stmnt.executeQuery(sql);
             if (rs.next()) {
                 System.out.println(rs.getInt(1));
@@ -141,11 +134,10 @@ public class FinancialDAO {
     }
 
     public ArrayList<Category> getAllCategories() {
-        Connection con = connection;
         ArrayList<Category> categories = new ArrayList<>();
         String sql = "SELECT * FROM categorie";
         try {
-            Statement statement = con.createStatement();
+            Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery(sql);
             while (rs.next()) {
                 categories.add(new Category(rs.getInt(1), rs.getString(2)));
