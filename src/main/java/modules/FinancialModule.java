@@ -4,6 +4,7 @@ import elements.AlertBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
+import javafx.scene.chart.*;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
@@ -27,12 +28,16 @@ public class FinancialModule {
 
     public void display(Stage primaryStage) {
         window = primaryStage;
-        window.setMinWidth( 500 );
-        window.setMaxHeight( 500 );
+        window.setWidth( 500 );
+        window.setHeight( 500 );
         window.setTitle( "Financial app" );
 
         BorderPane layout = new BorderPane();
         VBox excellLayout = new VBox();
+
+        /*
+        Start Excel Sheet
+         */
 
         //name column
         TableColumn<FinancialEntry, String> nameColumn = addColumn("name");
@@ -65,11 +70,26 @@ public class FinancialModule {
         inputAndButtonsBox.getChildren().addAll( nameInput, categories, valueInput, addButton );
 
         excellLayout.getChildren().addAll( table, inputAndButtonsBox );
-        layout.setCenter( excellLayout );
+
+        /*
+        End Excel Sheet
+
+        Start Pie and Bar Chart
+         */
+
+        PieChart pie = getPieChart();
+        BarChart bar = getBarChart();
 
         VBox pieAndBarChart = new VBox();
+        pieAndBarChart.getChildren().addAll( pie, bar );
 
-      //  layout.setRight();
+        /*
+        End Pie and Bar Chart
+         */
+
+        layout.setCenter( excellLayout );
+        layout.setRight( pieAndBarChart );
+
         Scene financialScreen = new Scene( layout );
         window.setScene( financialScreen );
         window.show();
@@ -110,4 +130,69 @@ public class FinancialModule {
         return true;
 
     }
+
+    private PieChart getPieChart(){
+
+        // TODO: get the actual values from the database -> category -> percentage
+
+        ObservableList<PieChart.Data> pieChartData =
+                FXCollections.observableArrayList(
+                        new PieChart.Data("Grapefruit", 13),
+                        new PieChart.Data("Oranges", 25),
+                        new PieChart.Data("Plums", 10),
+                        new PieChart.Data("Pears", 22),
+                        new PieChart.Data("Apples", 30));
+        final PieChart chart = new PieChart( pieChartData );
+        chart.setTitle("");
+        return chart;
+    }
+
+    private BarChart getBarChart(){
+
+        // TODO: get the actual values from the database
+
+        final CategoryAxis xAxis = new CategoryAxis();
+        final NumberAxis yAxis   = new NumberAxis();
+        final BarChart<String,Number> bc =
+                new BarChart<String,Number>(xAxis,yAxis);
+        bc.setTitle("Balance");
+        xAxis.setLabel("Month");
+        yAxis.setLabel("Value");
+
+        XYChart.Series series1 = new XYChart.Series();
+        series1.setName( "Income" );
+        series1.getData().add(new XYChart.Data( "Jan", 25601.34));
+        series1.getData().add(new XYChart.Data( "Feb", 20148.82));
+        series1.getData().add(new XYChart.Data( "Mar", 10000));
+        series1.getData().add(new XYChart.Data( "Apr", 12000));
+        series1.getData().add(new XYChart.Data( "May", 35407.15));
+        series1.getData().add(new XYChart.Data( "Jun", 12000));
+        series1.getData().add(new XYChart.Data( "Jul", 12000));
+        series1.getData().add(new XYChart.Data( "Aug", 12000));
+        series1.getData().add(new XYChart.Data( "Sept", 12000));
+        series1.getData().add(new XYChart.Data( "Oct", 12000));
+        series1.getData().add(new XYChart.Data( "Nov", 12000));
+        series1.getData().add(new XYChart.Data( "Dec", 12000));
+
+        XYChart.Series series2 = new XYChart.Series();
+        series2.setName( "Costs" );
+        series2.getData().add(new XYChart.Data( "Jan", 57401.85));
+        series2.getData().add(new XYChart.Data( "Feb", 41941.19));
+        series2.getData().add(new XYChart.Data( "Mar", 45263.37));
+        series2.getData().add(new XYChart.Data( "Apr", 117320.16));
+        series2.getData().add(new XYChart.Data( "May", 35407.15));
+        series2.getData().add(new XYChart.Data( "Jun", 12000));
+        series2.getData().add(new XYChart.Data( "Jul", 12000));
+        series2.getData().add(new XYChart.Data( "Aug", 12000));
+        series2.getData().add(new XYChart.Data( "Sept", 12000));
+        series2.getData().add(new XYChart.Data( "Oct", 12000));
+        series2.getData().add(new XYChart.Data( "Nov", 12000));
+        series2.getData().add(new XYChart.Data( "Dec", 12000));
+
+
+        bc.getData().addAll( series1, series2 );
+        return bc;
+    }
+
+
 }
