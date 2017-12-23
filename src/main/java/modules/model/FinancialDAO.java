@@ -10,7 +10,6 @@ public class FinancialDAO {
     private final Connection connection = getConnection();
 
 
-
     public void createEntryTableIfNotExist() {
         String sql = "CREATE TABLE IF NOT EXISTS financial_entry (\n"
                 + "	id integer PRIMARY KEY,\n"
@@ -42,18 +41,19 @@ public class FinancialDAO {
         }
     }
 
-    public boolean insertCategorie(Category categorie) {
-        String sql = "INSERT INTO categorie VALUES(?,?)";
-        boolean flag = false;
-        try {
-            PreparedStatement statement = connection.prepareStatement(sql);
-            statement.setInt(1, categorie.getId());
-            statement.setString(2, categorie.getName());
-            flag = statement.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public void insertCategorie(Category categorie) {
+        if (getCategorie(categorie.getName()) == null) {
+            String sql = "INSERT INTO category VALUES(?,?)";
+            boolean flag = false;
+            try {
+                PreparedStatement statement = connection.prepareStatement(sql);
+                statement.setInt(1, categorie.getId());
+                statement.setString(2, categorie.getName());
+                flag = statement.execute();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        return flag;
     }
 
     public boolean insertEntry(FinancialEntry entry) {
@@ -98,7 +98,23 @@ public class FinancialDAO {
     }
 
     public Category getCategorie(int id) {
-        String sql = String.format("SELECT * FROM categorie where id = %s", id);
+        String sql = String.format("SELECT * FROM category where id = %s", id);
+        try {
+            Statement stmnt = connection.createStatement();
+            ResultSet rs = stmnt.executeQuery(sql);
+            if (rs.next()) {
+                return new Category(rs.getInt(1), rs.getString(2));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+        return null;
+    }
+
+    public Category getCategorie(String name) {
+        String sql = String.format("SELECT * FROM category where name = %s", name);
         try {
             Statement stmnt = connection.createStatement();
             ResultSet rs = stmnt.executeQuery(sql);
@@ -131,7 +147,7 @@ public class FinancialDAO {
 
     public ArrayList<Category> getAllCategories() {
         ArrayList<Category> categories = new ArrayList<>();
-        String sql = "SELECT * FROM categorie";
+        String sql = "SELECT * FROM category";
         try {
             Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery(sql);

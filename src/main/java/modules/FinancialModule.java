@@ -29,7 +29,7 @@ public class FinancialModule {
     Validator validator = new Validator();
     FinancialDAO dao = new FinancialDAO();
     private final String FINANCIAL_ENTRY_TABLE_NAME = "financial_entry";
-    private final String CATEGORY_TABLE_NAME = "categorie";
+    private final String CATEGORY_TABLE_NAME = "category";
 
     public void display(Stage primaryStage) {
         window = primaryStage;

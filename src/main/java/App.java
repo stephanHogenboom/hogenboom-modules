@@ -18,7 +18,7 @@ public class App extends Application {
     Stage window;
     Button moduleOneButton;
     Button menuButton;
-    List<String> buttonlist = new ArrayList<>( Arrays.asList( "Finacial", "Real estate", "sql test" ) );
+    List<String> buttonlist = new ArrayList<>( Arrays.asList( "Finacial", "Real estate") );
     FinancialDAO dao = new FinancialDAO();
 
     public static void main(String... args) {
@@ -59,8 +59,6 @@ public class App extends Application {
                 break;
             case "Real estate": goToRealEstateModule();
                 break;
-            case "sql test" : sqlTest();
-                break;
             default: goToFinancialModule();
         }
     }
@@ -72,10 +70,5 @@ public class App extends Application {
 
     private void goToRealEstateModule() {
         AlertBox.display( "Error", "Module doesnt exist yet." );
-    }
-
-    private void sqlTest() {
-        dao.insertCategorie(new Category(1, "test"));
-        dao.insertEntry(new FinancialEntry(1, "blaat", 12.0, new Category(1, "test")));
     }
 }
