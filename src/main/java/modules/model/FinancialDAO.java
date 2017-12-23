@@ -5,12 +5,11 @@ import acces.GenerelDAO;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 public class FinancialDAO {
     private GenerelDAO dao = new GenerelDAO();
 
-    public void createTableIfNotExist() {
+    public void createEntryTableIfNotExist() {
         Connection con = dao.getConnection();
         String sql = "CREATE TABLE IF NOT EXISTS financial_entry (\n"
                 + "	id integer PRIMARY KEY,\n"
@@ -26,7 +25,36 @@ public class FinancialDAO {
             System.out.println(e.getMessage());
             e.printStackTrace();
         }
+    }
 
+    public void createCategorieTableIfNotExist() {
+        Connection con = dao.getConnection();
+        String sql = "CREATE TABLE IF NOT EXISTS categorie (\n"
+                + "	id integer PRIMARY KEY,\n"
+                + "	name text NOT NULL\n"
+                + ");";
+        try {
+            Statement statement = con.createStatement();
+            statement.execute(sql);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public boolean insertCategorie(Category categorie) {
+        Connection con = dao.getConnection();
+        String sql = "INSERT INTO categorie VALUES(?,?)";
+        boolean flag = false;
+        try {
+            PreparedStatement statement = con.prepareStatement(sql);
+            statement.setInt(1, categorie.getId());
+            statement.setString(2, categorie.getName());
+            flag = statement.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return flag;
     }
 
     public boolean insertEntry(FinancialEntry entry) {
@@ -47,9 +75,9 @@ public class FinancialDAO {
         return flag;
     }
 
-    public List<FinancialEntry> getAllFinancialEntries() {
+    public ArrayList<FinancialEntry> getAllFinancialEntries() {
         Connection con = dao.getConnection();
-        List<FinancialEntry> financialEntries = new ArrayList<>();
+        ArrayList<FinancialEntry> financialEntries = new ArrayList<>();
         String sql = "SELECT * FROM financial_entry";
         try {
             Statement statement = con.createStatement();
@@ -85,6 +113,40 @@ public class FinancialDAO {
             System.out.println(e.getMessage());
             e.printStackTrace();
             return null;
+        }
+        return null;
+    }
+
+    public Integer incrementAndGetId() {
+        Connection con = dao.getConnection();
+        String sql = "SELECT max(id) FROM categorie";
+        try {
+            Statement stmnt = con.createStatement();
+            ResultSet rs = stmnt.executeQuery(sql);
+            if (rs.next()) {
+                return rs.getInt(1) + 1;
+            } else return 1;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public ArrayList<Category> getAllCategories() {
+        Connection con = dao.getConnection();
+        ArrayList<Category> categories = new ArrayList<>();
+        String sql = "SELECT * FROM categorie";
+        try {
+            Statement statement = con.createStatement();
+            ResultSet rs = statement.executeQuery(sql);
+            while (rs.next()) {
+                categories.add(new Category(rs.getInt(1), rs.getString(2)));
+            }
+            return categories;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }

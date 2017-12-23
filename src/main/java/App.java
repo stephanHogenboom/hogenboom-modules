@@ -71,7 +71,9 @@ public class App extends Application {
 
     private void sqlTest() {
         FinancialDAO dao = new FinancialDAO();
-        dao.createTableIfNotExist();
-        dao.insertEntry(new FinancialEntry(1, "blaat", 12.0, new Category("test", 1)));
+        dao.createEntryTableIfNotExist();
+        dao.createCategorieTableIfNotExist();
+        dao.insertCategorie(new Category(1, "test"));
+        dao.insertEntry(new FinancialEntry(1, "blaat", 12.0, new Category(1, "test")));
     }
 }

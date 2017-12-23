@@ -12,10 +12,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import modules.model.Category;
+import modules.model.FinancialDAO;
 import modules.model.FinancialEntry;
 import util.Validator;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class FinancialModule {
 
@@ -25,6 +27,7 @@ public class FinancialModule {
     TextField nameInput, valueInput;
     ComboBox<String> categories;
     Validator validator = new Validator();
+    FinancialDAO dao = new FinancialDAO();
 
     public void display(Stage primaryStage) {
         window = primaryStage;
@@ -62,6 +65,9 @@ public class FinancialModule {
         categories = new ComboBox<>();
         categories.setEditable(true);
         categories.setPromptText("category");
+        for (Category category : dao.getAllCategories()) {
+            categories.getItems().add(category.getName());
+        }
 
         addButton = new Button("add");
         addButton.setOnAction(e -> addEntry());
@@ -104,7 +110,10 @@ public class FinancialModule {
 
     private ObservableList<FinancialEntry> getFinancialEntries() {
         ObservableList<FinancialEntry> entries = FXCollections.observableArrayList();
-        entries.add( new FinancialEntry(1, "test",  new Double(200.0) , new Category("test", 1)));
+        ArrayList<FinancialEntry> list = dao.getAllFinancialEntries();
+        for (FinancialEntry entry : list) {
+            entries.add(entry);
+        }
         return entries;
     }
 
@@ -121,8 +130,8 @@ public class FinancialModule {
             return false;
         }
         Double value = Double.parseDouble(valueString);
-        Category category = new Category(categoryString, (int) Math.random());
-        FinancialEntry categorie = new FinancialEntry(1, name, value, category);
+        Category category = new Category(1, categoryString);
+        FinancialEntry categorie = new FinancialEntry(dao.incrementAndGetId(), name, value, category);
         table.getItems().add(categorie);
         if (!categories.getItems().contains(categoryString)) {
             categories.getItems().add(categoryString);
