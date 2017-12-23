@@ -1,4 +1,3 @@
-import elements.AlertBox;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -15,17 +14,15 @@ import java.util.List;
 public class App extends Application {
 
     Stage window;
-    Button moduleOneButton;
     Button menuButton;
     List<String> buttonlist = new ArrayList<>( Arrays.asList( "Finacial", "Real estate") );
-    FinancialDAO dao = new FinancialDAO();
 
     public static void main(String... args) {
         FinancialDAO dao = new FinancialDAO();
         dao.createEntryTableIfNotExist();
         dao.createCategorieTableIfNotExist();
-        //Start the window
 
+        //Start the window
         launch(args);
     }
 
