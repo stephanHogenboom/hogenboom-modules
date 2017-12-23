@@ -31,25 +31,15 @@ public class FinancialModule {
 
         VBox excellLayout = new VBox();
 
+
         //name column
-        TableColumn<FinancialEntry, String> nameColumn = new TableColumn<>("name");
-        nameColumn.setMinWidth(200);
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-
+        TableColumn<FinancialEntry, String> nameColumn = addColumn("name");
         //Category column
-        TableColumn<FinancialEntry, Category> categoryColumn = new TableColumn<>("category");
-        categoryColumn.setMinWidth(200);
-        categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
-
+        TableColumn<FinancialEntry, Category> categoryColumn = addColumn("category");
         //valueColumn
-        TableColumn<FinancialEntry, Double> valueColumn = new TableColumn<>("value");
-        valueColumn.setMinWidth(200);
-        valueColumn.setCellValueFactory(new PropertyValueFactory<>("value"));
-
+        TableColumn<FinancialEntry, Double> valueColumn = addColumn("value");
         //DateColumn
-        TableColumn<FinancialEntry, LocalDateTime> dateColumn = new TableColumn<>("date");
-        dateColumn.setMinWidth(200);
-        dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        TableColumn<FinancialEntry, LocalDateTime> dateColumn = addColumn("date");
 
         //initializeTable
         table = new TableView<>();
@@ -108,10 +98,11 @@ public class FinancialModule {
 
     }
 
-    private void addColumn(String name) {
-        TableColumn<FinancialEntry, ?> nameColumn = new TableColumn<>(name);
-        nameColumn.setMinWidth(200);
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>(name));
+    private TableColumn addColumn(String name) {
+        TableColumn<FinancialEntry, ?> column = new TableColumn<>(name);
+        column.setMinWidth(200);
+        column.setCellValueFactory(new PropertyValueFactory<>(name));
+        return column;
     }
 
     public ObservableList<FinancialEntry> getFinancialEntries() {
