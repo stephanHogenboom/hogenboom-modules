@@ -84,8 +84,8 @@ public class FinancialDAO {
                 financialEntries.add(
                         bldr.setId(rs.getInt(1))
                                 .setName(rs.getString(2))
-                                .setCategorie(getCategorie(rs.getInt(3)))
-                                .setValue(rs.getDouble(4))
+                                .setCategorie(getCategorie(rs.getInt(4)))
+                                .setValue(rs.getDouble(3))
                                 .setDate(LocalDateTime.parse(rs.getString(5)))
                                 .build()
                 );
@@ -120,6 +120,8 @@ public class FinancialDAO {
             ResultSet rs = stmnt.executeQuery(sql);
             if (rs.next()) {
                 return new Category(rs.getInt(1), rs.getString(2));
+            } else {
+                System.out.println("no cat found for ID : " + id);
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -170,4 +172,6 @@ public class FinancialDAO {
             return this.connection;
         }
     }
+
+
 }
