@@ -16,6 +16,7 @@ public class App extends Application {
     Stage window;
     Button menuButton;
     List<String> buttonlist = new ArrayList<>( Arrays.asList( "Finacial", "Real estate") );
+    Scene scene;
 
     public static void main(String... args) {
         FinancialDAO dao = new FinancialDAO();
@@ -43,7 +44,7 @@ public class App extends Application {
         }
 
         //create scene
-        Scene scene = new Scene( layout );
+        scene = new Scene( layout );
 
         window.setScene(scene);
         window.show();
@@ -66,6 +67,6 @@ public class App extends Application {
 
     private void goToRealEstateModule() {
         RealEstateModule module = new RealEstateModule();
-        module.display(window);
+        module.display(window, scene);
     }
 }

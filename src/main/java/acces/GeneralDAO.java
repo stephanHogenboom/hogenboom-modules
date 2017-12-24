@@ -9,15 +9,15 @@ import java.sql.SQLException;
 */
 public class GeneralDAO {
 
-    private Connection connection;
+    private static Connection connection;
 
     public Connection getConnection() {
         String currentDir =  System.getProperty("user.dir");
-        if (this.connection == null) {
+        if (connection == null) {
             try {
                 connection = DriverManager.getConnection(String.format("jdbc:sqlite:%s%s", currentDir, "/financial.db"));
             } catch (SQLException e) {
-                System.out.println("Error getting connection!!!!!!!!");
+                System.out.printf("Error getting connection: %s", e.getMessage() + "\n");
                 return null;
             }
         }
