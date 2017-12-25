@@ -5,6 +5,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import modules.financialmodule.FinancialModule;
 import modules.financialmodule.model.FinancialDAO;
+import modules.realestate.RealEstateDAO;
 import modules.realestate.RealEstateModule;
 
 import java.util.ArrayList;
@@ -19,9 +20,11 @@ public class App extends Application {
     Scene scene;
 
     public static void main(String... args) {
-        FinancialDAO dao = new FinancialDAO();
-        dao.createEntryTableIfNotExist();
-        dao.createCategorieTableIfNotExist();
+        FinancialDAO fdao = new FinancialDAO();
+        fdao.createEntryTableIfNotExist();
+        fdao.createCategorieTableIfNotExist();
+        RealEstateDAO gdao = new RealEstateDAO();
+        gdao.createPropertyEntreeTableIfNotExist();
 
         //Start the window
         launch(args);

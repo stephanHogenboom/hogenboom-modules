@@ -11,7 +11,7 @@ public class GeneralDAO {
 
     private static Connection connection;
 
-    public Connection getConnection() {
+    protected Connection getConnection() {
         String currentDir =  System.getProperty("user.dir");
         if (connection == null) {
             try {

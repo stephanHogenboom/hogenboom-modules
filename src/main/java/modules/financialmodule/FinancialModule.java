@@ -13,6 +13,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import modules.Module;
 import modules.financialmodule.model.Category;
 import modules.financialmodule.model.FinancialDAO;
 import modules.financialmodule.model.FinancialEntry;
@@ -22,7 +23,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class FinancialModule {
+public class FinancialModule extends Module {
 
     Stage window;
     TableView<FinancialEntry> table;
@@ -104,13 +105,6 @@ public class FinancialModule {
         Scene financialScreen = new Scene( layout );
         window.setScene( financialScreen );
         window.show();
-    }
-
-    private TableColumn addColumn(String name) {
-        TableColumn<FinancialEntry, ?> column = new TableColumn<>(name);
-        column.setMinWidth(200);
-        column.setCellValueFactory(new PropertyValueFactory<>(name));
-        return column;
     }
 
     private ObservableList<FinancialEntry> getFinancialEntries() {

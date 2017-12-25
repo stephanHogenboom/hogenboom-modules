@@ -6,9 +6,8 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class FinancialDAO {
+public class FinancialDAO extends GeneralDAO {
     private final Connection connection = getConnection();
-
 
     public void createEntryTableIfNotExist() {
         String sql = "CREATE TABLE IF NOT EXISTS financial_entry (\n"
@@ -164,15 +163,4 @@ public class FinancialDAO {
         }
         return null;
     }
-
-    private Connection getConnection() {
-        if (this.connection == null) {
-            GeneralDAO dao = new GeneralDAO();
-            return dao.getConnection();
-        } else {
-            return this.connection;
-        }
-    }
-
-
 }

@@ -6,18 +6,23 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class RealEstateModule {
     Stage window;
     Button returnButton = new Button("return");
+    TableView<String> propertyInformationTable;
 
     public void display(Stage primaryStage, Scene previousScene) {
         window = primaryStage;
         window.setTitle("Real Estate module");
+        window.setMinWidth(1000);
+        window.setMinHeight(500);
 
         // the menu
-        Menu fileMenu = new Menu("file");
+        Menu fileMenu = new Menu("_file");
 
         //the items
         MenuItem newProperty = new MenuItem("new property...");
@@ -32,19 +37,42 @@ public class RealEstateModule {
         menuBar.getMenus().addAll(fileMenu);
 
         //Adding centre content
-        VBox centreDivider = new VBox();
-        HBox header = new HBox(10);
+        HBox centre = new HBox();
+        VBox centreInformationContainer = new VBox();
+        GridPane centreInformationTop = new GridPane();
+        centreInformationTop.setPadding(new Insets(10,10,10,10));
+        centreInformationTop.setVgap(8);
+        centreInformationTop.setHgap(10);
 
-        // Name and price of the property
-        Label houseName = getLabel();
-        houseName.setText("Staringkade 7, 2273RN");
 
-        Label askingPrice = getLabel();
-        askingPrice.setText("125000");
 
-        header.getChildren().addAll(houseName, askingPrice);
+        // Name of the property
+        Label propertyNameTitle = getLabel("property name", "BOLD");
+        GridPane.setConstraints(propertyNameTitle, 0 ,0);
 
-        centreDivider.getChildren().addAll(header);
+        Label houseName = getLabel("Staringkade 7, 2273RN");
+        GridPane.setConstraints(houseName, 0 ,1);
+
+        //price of the property
+        Label askingPriceHolder = getLabel("asking price", "BOLD");
+        GridPane.setConstraints(askingPriceHolder, 1 ,0);
+
+        Label askingPrice = getLabel("125000");
+        GridPane.setConstraints(askingPrice, 1 ,1);
+
+        //price of the property
+        Label sellPriceHolder = getLabel("sell price", "BOLD");
+        GridPane.setConstraints(sellPriceHolder, 2 ,0);
+
+        Label sellPrice = getLabel("90.000");
+        GridPane.setConstraints(sellPrice, 2 ,1);
+
+        centreInformationTop.getChildren().addAll(propertyNameTitle, houseName, askingPriceHolder, askingPrice, sellPriceHolder, sellPrice);
+
+        centreInformationContainer.getChildren().addAll(centreInformationTop);
+        centre.getChildren().addAll(centreInformationContainer);
+
+
 
         //initiate house list
         ListView<String> propertyList = new ListView<>();
@@ -66,7 +94,7 @@ public class RealEstateModule {
         //add BorderPane for layout
         BorderPane layout = new BorderPane();
         layout.setTop(menuBar);
-        layout.setCenter(centreDivider);
+        layout.setCenter(centre);
         layout.setLeft(propertyListContainer);
         layout.setBottom(returnButton);
         Scene scene = new Scene(layout);
@@ -74,12 +102,26 @@ public class RealEstateModule {
         window.show();
     }
 
-    private Label getLabel() {
-        Label houseName = new Label();
-        houseName.setPadding(new Insets(5,5,5,5));
-        houseName.setBorder(new Border(new BorderStroke(Color.BLACK,
+    private Label getLabel(String name, String option) {
+        Label label = new Label(name);
+        switch (option) {
+            case "BOLD" : label.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+                break;
+            default:
+        }
+        return getLabel(label);
+    }
+
+    private Label getLabel(String name) {
+        Label label = new Label(name);
+        return getLabel(label);
+    }
+
+    private Label getLabel(Label label) {
+        label.setPadding(new Insets(5,5,5,5));
+        label.setBorder(new Border(new BorderStroke(Color.BLACK,
                 BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        return houseName;
+        return label;
     }
 
     private TextField getTextField(String name) {
