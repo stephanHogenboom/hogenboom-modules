@@ -1,25 +1,34 @@
 package modules.realestate.model;
 
-import java.util.Optional;
+import java.time.LocalDate;
 
 public class PriceHistoryEntry {
 
-    private Optional<Long> askingPrice;
-    private Optional<Long> sellPrice;
+    private int id;
+    private Long askingPrice;
+    private LocalDate date;
 
-    public Optional<Long> getAskingPrice() {
+    public Long getAskingPrice() {
         return askingPrice;
     }
 
-    public void setAskingPrice(Optional<Long> askingPrice) {
+    public void setAskingPrice(Long askingPrice) {
         this.askingPrice = askingPrice;
     }
 
-    public Optional<Long> getSellPrice() {
-        return sellPrice;
+    public int getId() {
+        return id;
     }
 
-    public void setSellPrice(Optional<Long> sellPrice) {
-        this.sellPrice = sellPrice;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 }

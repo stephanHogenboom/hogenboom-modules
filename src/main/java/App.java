@@ -23,8 +23,12 @@ public class App extends Application {
         FinancialDAO fdao = new FinancialDAO();
         fdao.createEntryTableIfNotExist();
         fdao.createCategorieTableIfNotExist();
-        RealEstateDAO gdao = new RealEstateDAO();
-        gdao.createPropertyEntryTableIfNotExist();
+
+        RealEstateDAO rdao = new RealEstateDAO();
+        rdao.createPropertyEntryTableIfNotExist();
+        rdao.createAddressTableIfNotExist();
+        rdao.createTableAddresseeIfNotExist();
+        rdao.createPriceHistoryEntryTableIfNotExist();
 
         //Start the window
         launch(args);
@@ -34,8 +38,8 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
         window = primaryStage;
         window.setTitle("modules application");
-        window.setWidth(500);
-        window.setHeight(500);
+        window.setWidth(250);
+        window.setHeight(200);
 
         // create layout
         VBox layout = new VBox();
@@ -48,6 +52,7 @@ public class App extends Application {
 
         //create scene
         scene = new Scene(layout);
+        scene.getStylesheets().addAll("index.css");
 
         window.setScene(scene);
         window.show();

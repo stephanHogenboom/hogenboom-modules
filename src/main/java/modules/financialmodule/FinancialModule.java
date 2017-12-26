@@ -12,7 +12,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import modules.Module;
 import modules.financialmodule.model.Category;
 import modules.financialmodule.model.FinancialDAO;
@@ -47,7 +46,6 @@ public class FinancialModule extends Module {
         /*
          * Start Excel Sheet
          */
-
 
         //name column
         TableColumn<FinancialEntry, String> nameColumn = addColumn("name");
@@ -157,8 +155,6 @@ public class FinancialModule extends Module {
     }
 
     private PieChart getPieChart() {
-
-        // TODO: get the actual values from the database -> category -> percentage
 
         ArrayList<FinancialEntry> entries = dao.getAllFinancialEntries();
         ArrayList<Category> categories = dao.getAllCategories();

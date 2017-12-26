@@ -4,6 +4,7 @@ import acces.GeneralDAO;
 import elements.AlertBox;
 import modules.realestate.model.Address;
 import modules.realestate.model.Addressee;
+import modules.realestate.model.PriceHistoryEntry;
 import modules.realestate.model.PropertyEntry;
 
 import java.sql.*;
@@ -19,14 +20,10 @@ public class RealEstateDAO extends GeneralDAO{
         String sql = "CREATE TABLE IF NOT EXISTS property_entry (\n"
                 + "	id integer PRIMARY KEY,\n"
                 + "	address_id NOT NULL,\n"
-                + " date TEXT);";
-        try {
-            Statement statement = connection.createStatement();
-            statement.execute(sql);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        }
+                + " date TEXT, \n"
+                + " is_sold INTEGER, \n"
+                + " sell_price INTEGER);";
+        executeStatement(sql);
     }
 
     public void createAddressTableIfNotExist() {
@@ -36,27 +33,35 @@ public class RealEstateDAO extends GeneralDAO{
                 + " house_number INTEGER NOT NULL, \n"
                 + " extension TEXT, \n"
                 + " postal_code TEXT NOT NULL);";
-        try {
-            Statement statement = connection.createStatement();
-            statement.execute(sql);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        }
+        executeStatement(sql);
+    }
+
+    public void createPriceHistoryEntryTableIfNotExist() {
+        String sql = "CREATE TABLE IF NOT EXISTS price_history_entry (\n"
+                + " id integer PRIMARY KEY, \n"
+                + " price INTEGER NOT NULL, \n"
+                + " date TEXT);";
+        executeStatement(sql);
     }
 
     public boolean insertPropertyEntry(PropertyEntry entry) throws SQLException {
         connection.setAutoCommit(false);
-        insertddress(entry.getAddress());
+        insertAddress(entry.getAddress());
         List<Addressee> addressees = entry.getAddressees().orElse(new ArrayList<Addressee>());
         for (Addressee addressee : addressees) {
-            //insertAddressee();
+            insertAddressee(addressee);
         }
-        String sql = "INSERT INTO property_entry (?, ?, ?, ?)";
+        for (PriceHistoryEntry priceEntry : entry.getPriceHistories()) {
+            insertPriceHistoryEntry(priceEntry);
+        }
+
+        String sql = "INSERT INTO property_entry (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement stmnt = connection.prepareStatement(sql)) {
             stmnt.setInt(1,  incrementAndGetMaxId("property_entry"));
             stmnt.setInt(2, entry.getAddress().getAddressId());
             stmnt.setString(3, LocalDate.now().toString());
+            stmnt.setBoolean(4, entry.isSold());
+            stmnt.setLong(5, entry.getSellPrice());
             if (stmnt.execute()) {
                 return true;
             } else {
@@ -70,7 +75,7 @@ public class RealEstateDAO extends GeneralDAO{
         return  false;
     }
 
-    private boolean insertddress(Address address) {
+    private boolean insertAddress(Address address) {
         String sql = "Insert into address (?, ?, ?,?,?)";
         try (PreparedStatement stmnt = connection.prepareStatement(sql)) {
             stmnt.setInt(1, incrementAndGetMaxId("address"));
@@ -105,8 +110,51 @@ public class RealEstateDAO extends GeneralDAO{
             AlertBox.display("error", "the database crashed, the program will now shutdown");
             System.exit(    3);
         }
-
     }
 
+    public void createTableAddresseeIfNotExist() {
+        String sql = "CREATE TABLE IF NOT EXISTS addressee (\n"
+                + "	id integer PRIMARY KEY,\n"
+                + "	name TEXT NOT NULL,\n"
+                + " phone_number TEXT NOT NULL, \n"
+                + " emai TEXT);";
+        executeStatement(sql);
+    }
 
+    private boolean insertAddressee(Addressee addressee) {
+        String sql = "Insert INTO addressee (?, ?, ?, ?)";
+        try (PreparedStatement stmnt = connection.prepareStatement(sql)) {
+            stmnt.setInt(1, incrementAndGetMaxId("addressee"));
+            stmnt.setString(2, addressee.getName());
+            stmnt.setString(3, addressee.getPhoneNumber().orElse(""));
+            stmnt.setString(4, addressee.getEmail().orElse(""));
+            return stmnt.execute();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            return false;
+        }
+    }
+
+    private void executeStatement(String sql) {
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute(sql);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public boolean insertPriceHistoryEntry(PriceHistoryEntry priceEntry) {
+        String sql = "INSERT INTO price_history_entry (?, ?, ?)";
+        try (PreparedStatement stmnt = connection.prepareStatement(sql)) {
+            stmnt.setInt(1, incrementAndGetMaxId("price_history_entry"));
+            stmnt.setLong(2, priceEntry.getAskingPrice());
+            stmnt.setString(3, LocalDate.now().toString());
+            return stmnt.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

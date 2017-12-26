@@ -89,7 +89,6 @@ public class RealEstateModule {
         returnButton.setOnAction(e -> window.setScene(previousScene));
         ButtonBar bottomButtonBar = new ButtonBar();
         bottomButtonBar.getButtons().addAll(returnButton);
-        bottomButtonBar.setStyle("-fx-background-color: #0CE7DA;");
 
         //add BorderPane for layout
         BorderPane layout = new BorderPane();
@@ -97,6 +96,7 @@ public class RealEstateModule {
         layout.setLeft(propertyListContainer);
         layout.setBottom(bottomButtonBar);
         Scene scene = new Scene(layout);
+        scene.getStylesheets().addAll("index.css");
         window.setScene(scene);
         window.show();
     }

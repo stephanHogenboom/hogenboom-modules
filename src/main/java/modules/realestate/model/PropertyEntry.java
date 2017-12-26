@@ -11,6 +11,8 @@ public class PropertyEntry {
     private List<PriceHistoryEntry> priceHistories;
     private Optional<List<Addressee>> addressees;
     private LocalDate date;
+    private boolean isSold;
+    private Long sellPrice;
 
     public LocalDate getDate() {
         return date;
@@ -50,5 +52,21 @@ public class PropertyEntry {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isSold() {
+        return isSold;
+    }
+
+    public void setSold(boolean sold) {
+        isSold = sold;
+    }
+
+    public Long getSellPrice() {
+        return sellPrice;
+    }
+
+    public void setSellPrice(Long sellPrice) {
+        this.sellPrice = sellPrice;
     }
 }
