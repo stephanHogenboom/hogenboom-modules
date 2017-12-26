@@ -16,7 +16,7 @@ public class App extends Application {
 
     Stage window;
     Button menuButton;
-    List<String> buttonlist = new ArrayList<>( Arrays.asList( "Finacial", "Real estate") );
+    List<String> buttonlist = new ArrayList<>(Arrays.asList("Financial", "Real estate"));
     Scene scene;
 
     public static void main(String... args) {
@@ -24,7 +24,7 @@ public class App extends Application {
         fdao.createEntryTableIfNotExist();
         fdao.createCategorieTableIfNotExist();
         RealEstateDAO gdao = new RealEstateDAO();
-        gdao.createPropertyEntreeTableIfNotExist();
+        gdao.createPropertyEntryTableIfNotExist();
 
         //Start the window
         launch(args);
@@ -33,39 +33,42 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         window = primaryStage;
-        window.setTitle( "modules application" );
-        window.setWidth( 500 );
-        window.setHeight( 500 );
+        window.setTitle("modules application");
+        window.setWidth(500);
+        window.setHeight(500);
 
         // create layout
         VBox layout = new VBox();
 
-        for( String button : buttonlist ){
-            menuButton = new Button( button );
-            menuButton.setOnAction( e -> getModuleAction( button ) );
-            layout.getChildren().add( menuButton );
+        for (String button : buttonlist) {
+            menuButton = new Button(button);
+            menuButton.setOnAction(e -> getModuleAction(button));
+            layout.getChildren().add(menuButton);
         }
 
         //create scene
-        scene = new Scene( layout );
+        scene = new Scene(layout);
 
         window.setScene(scene);
         window.show();
     }
 
-    private void getModuleAction( String action ) {
-        switch( action ){
-            case "Financial": goToFinancialModule();
+    private void getModuleAction(String action) {
+        switch (action) {
+            case "Financial":
+                goToFinancialModule();
                 break;
-            case "Real estate": goToRealEstateModule();
+            case "Real estate":
+                goToRealEstateModule();
                 break;
-            default: goToFinancialModule();
+            default:
+                goToFinancialModule();
         }
     }
 
     private void goToFinancialModule() {
         FinancialModule module = new FinancialModule();
-        module.display(window);
+        module.display(window, scene);
     }
 
     private void goToRealEstateModule() {

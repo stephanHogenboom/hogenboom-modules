@@ -2,7 +2,7 @@ package modules.realestate.model;
 
 import java.util.Optional;
 
-public class PriceHistoryEntree {
+public class PriceHistoryEntry {
 
     private Optional<Long> askingPrice;
     private Optional<Long> sellPrice;

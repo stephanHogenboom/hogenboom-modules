@@ -1,14 +1,19 @@
 package modules.realestate;
 
-import elements.AlertBox;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class RealEstateModule {
     Stage window;
@@ -21,21 +26,6 @@ public class RealEstateModule {
         window.setMinWidth(1000);
         window.setMinHeight(500);
 
-        // the menu
-        Menu fileMenu = new Menu("_file");
-
-        //the items
-        MenuItem newProperty = new MenuItem("new property...");
-        newProperty.setOnAction(e -> System.out.println("new property"));
-        MenuItem swapModule = new MenuItem("swap module");
-        swapModule.setOnAction(e -> AlertBox.display("invalid", "not implemented yet"));
-        fileMenu.getItems().addAll(newProperty, new SeparatorMenuItem(), swapModule);
-
-        // main menu bar
-        MenuBar menuBar = new MenuBar();
-
-        menuBar.getMenus().addAll(fileMenu);
-
         //Adding centre content
         HBox centre = new HBox();
         VBox centreInformationContainer = new VBox();
@@ -43,8 +33,6 @@ public class RealEstateModule {
         centreInformationTop.setPadding(new Insets(10,10,10,10));
         centreInformationTop.setVgap(8);
         centreInformationTop.setHgap(10);
-
-
 
         // Name of the property
         Label propertyNameTitle = getLabel("property name", "BOLD");
@@ -69,9 +57,18 @@ public class RealEstateModule {
 
         centreInformationTop.getChildren().addAll(propertyNameTitle, houseName, askingPriceHolder, askingPrice, sellPriceHolder, sellPrice);
 
-        centreInformationContainer.getChildren().addAll(centreInformationTop);
-        centre.getChildren().addAll(centreInformationContainer);
+        // set ImageView
+        ImageView propertyPortait = getImageView();
 
+
+
+
+        centreInformationContainer.getChildren().addAll(centreInformationTop);
+        if (propertyPortait != null) {
+            centre.getChildren().addAll(centreInformationContainer, propertyPortait);
+        } else {
+            centre.getChildren().addAll(centreInformationContainer);
+        }
 
 
         //initiate house list
@@ -90,16 +87,31 @@ public class RealEstateModule {
         propertyListContainer.getChildren().addAll(propertyList, propertyListButtonContainer);
 
         returnButton.setOnAction(e -> window.setScene(previousScene));
+        ButtonBar bottomButtonBar = new ButtonBar();
+        bottomButtonBar.getButtons().addAll(returnButton);
+        bottomButtonBar.setStyle("-fx-background-color: #0CE7DA;");
 
         //add BorderPane for layout
         BorderPane layout = new BorderPane();
-        layout.setTop(menuBar);
         layout.setCenter(centre);
         layout.setLeft(propertyListContainer);
-        layout.setBottom(returnButton);
+        layout.setBottom(bottomButtonBar);
         Scene scene = new Scene(layout);
         window.setScene(scene);
         window.show();
+    }
+
+    private ImageView getImageView() {
+        Path dir = Paths.get(".").toAbsolutePath().normalize();
+        Path file = Paths.get(dir.toString() + "/0.jpg");
+        ImageView propertyPortait = null;
+        if (Files.exists(file)) {
+            Image image = new Image(file.toUri().toString());
+            propertyPortait = new ImageView(image);
+            propertyPortait.setFitWidth(350);
+            propertyPortait.setStyle("-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 2, 2, 2);");
+        }
+        return propertyPortait;
     }
 
     private Label getLabel(String name, String option) {
