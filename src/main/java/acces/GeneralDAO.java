@@ -27,4 +27,8 @@ public class GeneralDAO {
         String currentDir =  System.getProperty("user.dir");
         return String.format("jdbc:sqlite:%s%s", currentDir, "/financial.db");
     }
+
+    public static String getStringSaveNullSave(String string) {
+        return (string == null) ? "" : string;
+    }
 }

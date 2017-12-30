@@ -4,7 +4,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import modules.financialmodule.FinancialModule;
-import modules.realestate.RealEstateModule;
+import modules.realestate.RealEstateOverView;
 import org.flywaydb.core.Flyway;
 import org.sqlite.SQLiteConfig;
 import org.sqlite.SQLiteDataSource;
@@ -91,7 +91,7 @@ public class App extends Application {
     }
 
     private void goToRealEstateModule() {
-        RealEstateModule module = new RealEstateModule();
+        RealEstateOverView module = new RealEstateOverView();
         module.display(window, scene);
     }
 }

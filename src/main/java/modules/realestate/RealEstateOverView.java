@@ -9,15 +9,19 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import modules.Module;
+import modules.realestate.model.PropertyEntry;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
-public class RealEstateModule extends Module {
+public class RealEstateOverView extends Module {
     Stage window;
     Button returnButton = new Button("return");
     TableView<String> propertyInformationTable;
+    RealEstateDAO dao = new RealEstateDAO();
 
     public void display(Stage primaryStage, Scene previousScene) {
         window = primaryStage;
@@ -69,9 +73,14 @@ public class RealEstateModule extends Module {
 
         //initiate house list
         ListView<String> propertyList = new ListView<>();
+        List<PropertyEntry> entries = dao.getPropertyEntries();
+        List<String> propertyNames = new ArrayList<>();
+
+        entries.forEach(entry -> propertyNames.add(entry.getName()));
+
         VBox propertyListContainer = new VBox();
         propertyListContainer.setMaxWidth(250);
-        propertyList.getItems().addAll("Staringkade 7, Voorburg", "van der Marckstaat 17, voorburg");
+        propertyList.getItems().addAll(propertyNames);
 
         HBox propertyListButtonContainer = new HBox();
         Button addButton = new Button("add");
