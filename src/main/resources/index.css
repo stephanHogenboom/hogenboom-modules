@@ -12,7 +12,7 @@
 .label {
     -fx-background-color: #59f442;
     -fx-text-fill: white;
-    -fx-pref-width: 150px;
+    -fx-pref-width: 300px;
 }
 
 .text-field {

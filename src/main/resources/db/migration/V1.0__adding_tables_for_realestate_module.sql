@@ -8,12 +8,13 @@ CREATE TABLE property_entry (
     );
 
 CREATE TABLE address (
-    kix_code TEXT PRIMARY KEY,
+    kix_code TEXT ,
     country TEXT NOT NULL,
     street TEXT NOT NULL,
     house_number INTEGER NOT NULL,
     extension TEXT,
-    postal_code TEXT NOT NULL
+    postal_code TEXT NOT NULL,
+    PRIMARY KEY (kix_code) ON CONFLICT IGNORE
     );
 
 
@@ -21,8 +22,8 @@ CREATE TABLE price_history_entry (
     property_id INTEGER,
     price INTEGER NOT NULL,
     date TEXT,
-    PRIMARY KEY (property_id, date)
-    FOREIGN KEY (property_id) REFERENCES property_entry (property_id)
+    PRIMARY KEY (property_id, date) ON CONFLICT IGNORE
+    FOREIGN KEY (property_id) REFERENCES property_entry (property_id) ON DELETE CASCADE
     );
 
 CREATE TABLE addressee (

@@ -85,4 +85,16 @@ public class PropertyEntry {
     public String getName() {
         return String.format("%s %s%s , %s %s", address.getStreet(), address.getHouseNumber(), address.getExtension(), address.getPostalCode(), address.getCountry() );
     }
+
+    public PriceHistoryEntry getLatestPriceHistoryEntry(){
+        if (priceHistories == null || priceHistories.isEmpty()) {
+            return null;
+        }
+        PriceHistoryEntry priceHistoryEntry = priceHistories.get(0);
+        for (PriceHistoryEntry entry : priceHistories) {
+            if (entry.getDate().isAfter(priceHistoryEntry.getDate()))
+                priceHistoryEntry = entry;
+        }
+        return priceHistoryEntry;
+    }
 }

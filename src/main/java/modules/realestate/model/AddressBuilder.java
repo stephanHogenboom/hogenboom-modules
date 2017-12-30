@@ -1,5 +1,7 @@
 package modules.realestate.model;
 
+import elements.AlertBox;
+
 public class AddressBuilder {
 
     private String country;

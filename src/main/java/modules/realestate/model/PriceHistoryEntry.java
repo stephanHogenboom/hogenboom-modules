@@ -22,4 +22,13 @@ public class PriceHistoryEntry {
     public void setDate(LocalDate date) {
         this.date = date;
     }
+
+    @Override
+    public String toString() {
+        return "PriceHistoryEntry{" +
+                "askingPrice=" + askingPrice +
+                ", date=" + date +
+                '}';
+    }
+
 }

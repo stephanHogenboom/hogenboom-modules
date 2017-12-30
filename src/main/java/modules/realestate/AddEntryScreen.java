@@ -31,7 +31,7 @@ public class AddEntryScreen extends Module {
     CheckBox isSold;
     Stage window;
 
-    public void display() {
+    public void display(PropertyEntry entry) {
         window = new Stage();
 
         if (!window.getModality().equals(Modality.APPLICATION_MODAL)) {
@@ -71,10 +71,24 @@ public class AddEntryScreen extends Module {
 
         vbox.getChildren().addAll(streetNameEntry, numberExtension, postalCode, askingPrice, sellPrice, buttonBar);
         Scene scene = new Scene(vbox);
+        if (entry != null) {
+            setEntryValues(entry);
+        }
         window.setScene(scene);
         window.showAndWait();
-
     }
+
+    public void setEntryValues(PropertyEntry entry) {
+        Address address = entry.getAddress();
+        isSold.setSelected(entry.isSold());
+        houseNumber.setText(String.valueOf(address.getHouseNumber()));
+        extension.setText(address.getExtension());
+        streetNameEntry.setText(address.getStreet());
+        sellPrice.setText(String.valueOf(entry.getSellPrice()));
+        askingPrice.setText(entry.getLatestPriceHistoryEntry().getAskingPrice().toString());
+        postalCode.setText(address.getPostalCode());
+    }
+
 
     private void addProperty() {
         Address address = new Address();
@@ -132,8 +146,8 @@ public class AddEntryScreen extends Module {
 
         RealEstateDAO dao = new RealEstateDAO();
         try {
-            dao.insertPropertyEntry(entry);
             window.close();
+            dao.insertPropertyEntry(entry);
         } catch (SQLException e) {
             AlertBox.display("error", e.getMessage());
             System.out.println(e.getMessage());
