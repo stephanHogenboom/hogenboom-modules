@@ -4,34 +4,48 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import modules.financialmodule.FinancialModule;
-import modules.financialmodule.model.FinancialDAO;
-import modules.realestate.RealEstateDAO;
 import modules.realestate.RealEstateModule;
+import org.flywaydb.core.Flyway;
+import org.sqlite.SQLiteConfig;
+import org.sqlite.SQLiteDataSource;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static util.EnvironmentUtils.getEnvOrPropertyOrDefault;
+
 public class App extends Application {
 
-    Stage window;
-    Button menuButton;
-    List<String> buttonlist = new ArrayList<>(Arrays.asList("Financial", "Real estate"));
-    Scene scene;
+    private Stage window;
+    private Button menuButton;
+    private List<String> buttonlist = new ArrayList<>(Arrays.asList("Financial", "Real estate"));
+    private Scene scene;
+    private static final String dataBaseUrl = getEnvOrPropertyOrDefault("BASE_URL", "jdbc:sqlite:financial.db");
+    private static final String migrationLocation = getEnvOrPropertyOrDefault("MIGRATION_LOCATION", "classpath:db/migration");
 
     public static void main(String... args) {
-        FinancialDAO fdao = new FinancialDAO();
-        fdao.createEntryTableIfNotExist();
-        fdao.createCategorieTableIfNotExist();
-
-        RealEstateDAO rdao = new RealEstateDAO();
-        rdao.createPropertyEntryTableIfNotExist();
-        rdao.createAddressTableIfNotExist();
-        rdao.createTableAddresseeIfNotExist();
-        rdao.createPriceHistoryEntryTableIfNotExist();
-
+        configureFlywayAndMigrateDataBase();
         //Start the window
         launch(args);
+    }
+
+    private static void configureFlywayAndMigrateDataBase() {
+        try {
+            Flyway flyway = new Flyway();
+            SQLiteConfig config = new SQLiteConfig();
+            config.setJournalMode(SQLiteConfig.JournalMode.WAL);
+            config.setSynchronous(SQLiteConfig.SynchronousMode.NORMAL);
+            SQLiteDataSource dataSource = new SQLiteDataSource();
+            dataSource.setUrl(dataBaseUrl);
+            flyway.setLocations(migrationLocation);
+            flyway.setDataSource(dataSource);
+            flyway.migrate();
+        } catch (Exception e) {
+            System.err.println("some thing went wrong during the migration of the dataBase.");
+            System.out.println("Does the base url point to your db? Or is your migration out of sync?");
+            System.exit(1);
+        }
     }
 
     @Override

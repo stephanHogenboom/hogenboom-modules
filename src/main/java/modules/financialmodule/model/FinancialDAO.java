@@ -9,37 +9,6 @@ import java.util.ArrayList;
 public class FinancialDAO extends GeneralDAO {
     private final Connection connection = getConnection();
 
-    public void createEntryTableIfNotExist() {
-        String sql = "CREATE TABLE IF NOT EXISTS financial_entry (\n"
-                + "	id integer PRIMARY KEY,\n"
-                + "	name text NOT NULL,\n"
-                + "	value real,\n"
-                + " categorie_id integer, \n"
-                + " timestamp TEXT"
-                + ");";
-        try {
-            Statement statement = connection.createStatement();
-            statement.execute(sql);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    public void createCategorieTableIfNotExist() {
-        String sql = "CREATE TABLE IF NOT EXISTS category (\n"
-                + "	id integer PRIMARY KEY,\n"
-                + "	name text NOT NULL\n"
-                + ");";
-        try {
-            Statement statement = connection.createStatement();
-            statement.execute(sql);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
     public void insertCategorie(Category categorie) {
         if (getCategorie(categorie.getName()) == null) {
             String sql = "INSERT INTO category VALUES(?,?)";

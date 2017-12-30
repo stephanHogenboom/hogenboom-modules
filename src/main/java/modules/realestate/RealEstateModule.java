@@ -7,15 +7,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
+import modules.Module;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class RealEstateModule {
+public class RealEstateModule extends Module {
     Stage window;
     Button returnButton = new Button("return");
     TableView<String> propertyInformationTable;
@@ -60,9 +59,6 @@ public class RealEstateModule {
         // set ImageView
         ImageView propertyPortait = getImageView();
 
-
-
-
         centreInformationContainer.getChildren().addAll(centreInformationTop);
         if (propertyPortait != null) {
             centre.getChildren().addAll(centreInformationContainer, propertyPortait);
@@ -79,6 +75,10 @@ public class RealEstateModule {
 
         HBox propertyListButtonContainer = new HBox();
         Button addButton = new Button("add");
+        addButton.setOnAction(e -> {
+            AddEntryScreen screen = new AddEntryScreen();
+            screen.display();
+        });
 
         Button deleteButton = new Button("delete");
 
@@ -114,32 +114,5 @@ public class RealEstateModule {
         return propertyPortait;
     }
 
-    private Label getLabel(String name, String option) {
-        Label label = new Label(name);
-        switch (option) {
-            case "BOLD" : label.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
-                break;
-            default:
-        }
-        return getLabel(label);
-    }
 
-    private Label getLabel(String name) {
-        Label label = new Label(name);
-        return getLabel(label);
-    }
-
-    private Label getLabel(Label label) {
-        label.setPadding(new Insets(5,5,5,5));
-        label.setBorder(new Border(new BorderStroke(Color.BLACK,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        return label;
-    }
-
-    private TextField getTextField(String name) {
-        TextField textField = new TextField();
-        textField.setPromptText(name);
-        textField.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-        return textField;
-    }
 }
