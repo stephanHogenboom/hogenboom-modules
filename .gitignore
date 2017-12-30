@@ -4,6 +4,9 @@ reated by https://www.gitignore.io/api/java,intellij+iml
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
+## compiled code
+target/
+
 idea/vcs.xml
 # User-specific stuff:
 .idea/**/workspace.xml
@@ -23,6 +26,8 @@ idea/vcs.xml
 .idea/**/gradle.xml
 .idea/**/libraries
 
+#dbNavigator
+.idea/dbnavigator.xml
 # CMake
 cmake-build-debug/
 
@@ -33,6 +38,8 @@ cmake-build-debug/
 *.iws
 
 ## Plugin-specific files:
+
+.idea/vcs.xml
 
 # IntelliJ
 /out/
