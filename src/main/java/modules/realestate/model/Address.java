@@ -2,18 +2,22 @@ package modules.realestate.model;
 
 
 public class Address {
-    private int AddressId;
+    private String country;
+    private String kixCode;
     private String street;
     private int houseNumber;
     private String extension;
     private  String postalCode;
 
-    public int getAddressId() {
-        return AddressId;
-    }
+    public Address() {}
 
-    public void setAddressId(int addressId) {
-        AddressId = addressId;
+    public Address(String country, String kixCode, String street, int houseNumber, String extension, String postalCode) {
+        this.country = country;
+        this.kixCode = kixCode;
+        this.street = street;
+        this.houseNumber = houseNumber;
+        this.extension = extension;
+        this.postalCode = postalCode;
     }
 
     public String getStreet() {
@@ -46,5 +50,33 @@ public class Address {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public void setKixCode(String kixCode) {
+        this.kixCode = kixCode;
+    }
+
+    public String getKixCode() {
+        return kixCode;
+    }
+
+    @Override
+    public String toString() {
+        return "Address{" +
+                "country='" + country + '\'' +
+                ", kixCode='" + kixCode + '\'' +
+                ", street='" + street + '\'' +
+                ", houseNumber=" + houseNumber +
+                ", extension='" + extension + '\'' +
+                ", postalCode='" + postalCode + '\'' +
+                '}';
     }
 }

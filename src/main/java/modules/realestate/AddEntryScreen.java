@@ -1,5 +1,6 @@
 package modules.realestate;
 
+import com.google.common.annotations.VisibleForTesting;
 import elements.AlertBox;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -12,6 +13,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import modules.Module;
 import modules.realestate.model.Address;
+import modules.realestate.model.AddressBuilder;
 import modules.realestate.model.PriceHistoryEntry;
 import modules.realestate.model.PropertyEntry;
 import util.Validator;
@@ -27,9 +29,10 @@ public class AddEntryScreen extends Module {
     TextField streetNameEntry, houseNumber, extension, postalCode, askingPrice, sellPrice;
     Validator validator = new Validator();
     CheckBox isSold;
+    Stage window;
 
     public void display() {
-        Stage window = new Stage();
+        window = new Stage();
 
         if (!window.getModality().equals(Modality.APPLICATION_MODAL)) {
             window.initModality(Modality.APPLICATION_MODAL);
@@ -75,26 +78,37 @@ public class AddEntryScreen extends Module {
 
     private void addProperty() {
         Address address = new Address();
-        List<TextField> list = new ArrayList<>(Arrays.asList(streetNameEntry, houseNumber,  postalCode));
+        List<TextField> list = new ArrayList<>(Arrays.asList(streetNameEntry, houseNumber, postalCode));
         for (TextField field : list) {
             if (field.getText() == null || field.getText().trim().isEmpty()) {
-                AlertBox.display("error", field.getPromptText() + " must be non empty!" );
+                AlertBox.display("error", field.getPromptText() + " must be non empty!");
                 return;
             }
         }
-        address.setStreet(streetNameEntry.getText());
+        String postalCodeText = postalCode.getText().toUpperCase();
+        if (!isValidPostalCode(postalCodeText)) {
+            AlertBox.display("error", postalCode.getText() + "is not a valid postalcode!");
+            return;
+        }
+
+        AddressBuilder bldr = new AddressBuilder();
+
         if (!validator.isNumeric(houseNumber.getText())) {
             AlertBox.display("error", "house number is not numeric!");
             return;
         }
-        address.setHouseNumber(Integer.parseInt(houseNumber.getText()));
-        if (extension.getText() == null || extension.getText().isEmpty()) {
-            address.setExtension(extension.getText());
-        }
-        address.setPostalCode(postalCode.getText());
+
+        String ext = (extension.getText() != null || !extension.getText().isEmpty()) ? extension.getText() : "";
+        System.out.println(postalCode.getText());
+        bldr.setCountry("NL")
+                .setPostalCode(postalCodeText)
+                .setStreet(streetNameEntry.getText())
+                .setHouseNumber(Integer.parseInt(houseNumber.getText()))
+                .setExtension(ext)
+                .setKixCode();
 
         PropertyEntry entry = new PropertyEntry();
-        entry.setAddress(address);
+        entry.setAddress(bldr.build());
         entry.setDate(LocalDate.now());
         entry.setSold(isSold.isSelected());
         PriceHistoryEntry priceHistoryEntry = new PriceHistoryEntry();
@@ -119,11 +133,18 @@ public class AddEntryScreen extends Module {
         RealEstateDAO dao = new RealEstateDAO();
         try {
             dao.insertPropertyEntry(entry);
+            window.close();
         } catch (SQLException e) {
+            AlertBox.display("error", e.getMessage());
             System.out.println(e.getMessage());
             e.printStackTrace();
+            window.close();
         }
+    }
 
-
+    @VisibleForTesting
+    boolean isValidPostalCode(String postalCode) {
+        //https://stackoverflow.com/questions/578406/what-is-the-ultimate-postal-code-and-zip-regex
+        return postalCode.matches("\\d{4}[ ]?[A-Z]{2}");
     }
 }

@@ -6,7 +6,6 @@ import java.util.Optional;
 
 public class PropertyEntry {
 
-    private int id;
     private Address address;
     private List<PriceHistoryEntry> priceHistories;
     private Optional<List<Addressee>> addressees;
@@ -46,13 +45,7 @@ public class PropertyEntry {
         this.addressees = addressees;
     }
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public boolean isSold() {
         return isSold;
@@ -68,5 +61,17 @@ public class PropertyEntry {
 
     public void setSellPrice(Long sellPrice) {
         this.sellPrice = sellPrice;
+    }
+
+    @Override
+    public String toString() {
+        return "PropertyEntry{" +
+                ", address=" + address +
+                ", priceHistories=" + priceHistories +
+                ", addressees=" + addressees +
+                ", date=" + date +
+                ", isSold=" + isSold +
+                ", sellPrice=" + sellPrice +
+                '}';
     }
 }

@@ -14,7 +14,7 @@ public class RealEstateDAO extends GeneralDAO {
 
 
     public void insertPropertyEntry(PropertyEntry entry) throws SQLException {
-        boolean sold = entry.getSellPrice() != null;
+        System.out.println(entry);
         insertAddress(entry.getAddress());
         /*List<Addressee> addressees = entry.getAddressees().orElse(new ArrayList());
         for (Addressee addressee : addressees) {
@@ -23,14 +23,12 @@ public class RealEstateDAO extends GeneralDAO {
         for (PriceHistoryEntry priceEntry : entry.getPriceHistories()) {
             insertPriceHistoryEntry(priceEntry);
         }
-        System.out.println(entry.getSellPrice());
-        String sql = String.format("INSERT INTO property_entry  VALUES (?, ?, ?, ?%s)", sold? ",? " : "");
+        String sql = "INSERT INTO property_entry  VALUES (?, ?, ?, ?);";
         try (PreparedStatement stmnt = connection.prepareStatement(sql)) {
-            stmnt.setInt(1, incrementAndGetMaxId("property_entry"));
-            stmnt.setInt(2, entry.getAddress().getAddressId());
-            stmnt.setString(3, LocalDate.now().toString());
-            stmnt.setBoolean(4, entry.isSold());
-            if (sold) stmnt.setLong(5, entry.getSellPrice());
+            stmnt.setString(1, entry.getAddress().getKixCode());
+            stmnt.setString(2, entry.getDate().toString());
+            stmnt.setBoolean(3, entry.isSold());
+            stmnt.setLong(4, entry.getSellPrice() != null? entry.getSellPrice() : 0);
             stmnt.execute();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -38,13 +36,14 @@ public class RealEstateDAO extends GeneralDAO {
     }
 
     private void insertAddress(Address address) {
-        String sql = "Insert into address VALUES (?, ?, ?,?,?)";
+        String sql = "Insert into address VALUES (?, ?, ?, ?, ?, ?);";
         try (PreparedStatement stmnt = connection.prepareStatement(sql)) {
-            stmnt.setInt(1, incrementAndGetMaxId("address"));
-            stmnt.setString(2, address.getStreet());
-            stmnt.setInt(3, address.getHouseNumber());
-            stmnt.setString(4, address.getExtension());
+            stmnt.setString(1, address.getKixCode());
+            stmnt.setString(2, address.getCountry());
+            stmnt.setString(3, address.getStreet());
+            stmnt.setInt(4, address.getHouseNumber());
             stmnt.setString(5, address.getPostalCode());
+            stmnt.setString(6, address.getExtension());
             stmnt.execute();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
