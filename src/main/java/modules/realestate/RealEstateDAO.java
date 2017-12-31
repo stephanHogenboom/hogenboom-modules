@@ -109,6 +109,7 @@ class RealEstateDAO extends GeneralDAO {
     void insertPropertyEntry(PropertyEntry entry) throws SQLException {
         System.out.println(entry);
         insertAddress(entry.getAddress());
+        System.out.println(entry.getAddressees());
         List<Addressee> addressees = entry.getAddressees().orElse(new ArrayList());
         for (Addressee addressee : addressees) {
             insertAddressee(addressee);

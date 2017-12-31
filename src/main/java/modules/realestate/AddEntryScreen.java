@@ -148,6 +148,11 @@ public class AddEntryScreen extends Module {
         entry.setDate(LocalDate.now());
         entry.setSold(isSold.isSelected());
         PriceHistoryEntry priceHistoryEntry = new PriceHistoryEntry();
+
+        if (oldEntry != null && oldEntry.getAddressees().isPresent()) {
+            entry.setAddressees(oldEntry.getAddressees());
+        }
+
         // prices should be numeric
         if (!validator.isNumeric(askingPrice.getText())) {
             AlertBox.display("error", "asking price is not numeric!");

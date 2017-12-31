@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import modules.Module;
 import modules.realestate.model.Address;
+import modules.realestate.model.Addressee;
 import modules.realestate.model.PropertyEntry;
 
 import java.nio.file.Files;
@@ -58,7 +59,7 @@ public class RealEstateOverView extends Module {
         VBox propertyListContainer = new VBox();
         propertyListContainer.setMaxWidth(250);
 
-        HBox propertyListButtonContainer = new HBox();
+        ButtonBar buttonBar = new ButtonBar();
 
         // Name of the property
         Label propertyNameTitle = getLabel("property name", "BOLD");
@@ -84,18 +85,21 @@ public class RealEstateOverView extends Module {
         centreInformationTop.getChildren().addAll(propertyNameTitle, houseName, askingPriceHolder, askingPrice, sellPriceHolder, sellPrice);
 
 
-        // set ImageView
+        //set ImageView
         ImageView propertyPortait = getImageView();
 
-        centreInformationContainer.getChildren().addAll(centreInformationTop);
+        HBox centreInfoBox = new HBox();
+        ListView<String> addressees = new ListView<>();
+        centreInfoBox.getChildren().addAll(addressees);
+
+        centreInformationContainer.getChildren().addAll(centreInformationTop, centreInfoBox);
         if (propertyPortait != null) {
             centre.getChildren().addAll(centreInformationContainer, propertyPortait);
         } else {
             centre.getChildren().addAll(centreInformationContainer);
         }
 
-
-        //Buttons
+        //Define Buttons
         Button addButton = new Button("add");
         addButton.setOnAction(e -> {
             AddEntryScreen screen = new AddEntryScreen();
@@ -129,9 +133,24 @@ public class RealEstateOverView extends Module {
             }
         });
 
+        Button infoButton = new Button("info");
+        infoButton.setOnAction(e ->  {
+            addressees.getItems().removeAll(addressees.getItems());
+            String selectedItem = propertyList.getSelectionModel().getSelectedItems().get(0);
+            PropertyEntry entry = getPropertyEntryByName(selectedItem);
+            List<Addressee> addresseeList= entry.getAddressees().orElse(new ArrayList<>());
+            for (Addressee addressee : addresseeList) {
+                addressees.getItems().add(addressee.getName());
+            }
+        });
+
+
+
+
+
         // add buttons and list to layout
-        propertyListButtonContainer.getChildren().addAll(addButton, deleteButton, copyButton);
-        propertyListContainer.getChildren().addAll(propertyList, propertyListButtonContainer);
+        buttonBar.getButtons().addAll(addButton, deleteButton, copyButton, infoButton);
+        propertyListContainer.getChildren().addAll(propertyList, buttonBar);
 
         returnButton.setOnAction(e -> window.setScene(previousScene));
         ButtonBar bottomButtonBar = new ButtonBar();
