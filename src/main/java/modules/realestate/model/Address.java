@@ -7,17 +7,20 @@ public class Address {
     private String street;
     private int houseNumber;
     private String extension;
-    private  String postalCode;
+    private String postalCode;
+    private String city;
 
     public Address() {}
 
-    public Address(String country, String kixCode, String street, int houseNumber, String extension, String postalCode) {
+    public Address(String country, String kixCode, String street, int houseNumber, String extension, String postalCode,
+                   String city) {
         this.country = country;
         this.kixCode = kixCode;
         this.street = street;
         this.houseNumber = houseNumber;
         this.extension = extension;
         this.postalCode = postalCode;
+        this.city = city;
     }
 
     public String getStreet() {
@@ -68,6 +71,7 @@ public class Address {
         return kixCode;
     }
 
+
     @Override
     public String toString() {
         return "Address{" +
@@ -78,5 +82,13 @@ public class Address {
                 ", extension='" + extension + '\'' +
                 ", postalCode='" + postalCode + '\'' +
                 '}';
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

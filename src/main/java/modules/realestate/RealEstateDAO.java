@@ -10,6 +10,7 @@ import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 class RealEstateDAO extends GeneralDAO {
     private Connection connection = getConnection();
@@ -74,23 +75,44 @@ class RealEstateDAO extends GeneralDAO {
                 address.setHouseNumber(rs.getInt(4));
                 address.setExtension(GeneralDAO.getStringSaveNullSave(rs.getString(5)));
                 address.setPostalCode(rs.getString(6));
+                address.setCity(rs.getString(7));
                 return address;
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
 
+    private List<Addressee> getAddressees(Address address) {
+        List<Addressee> addresseeList = new ArrayList<>();
+        String sql = String.format("SELECT * FROM addressee where kix_code = '%s';",address.getKixCode());
+        try (Statement stmnt = connection.createStatement();
+             ResultSet rs = stmnt.executeQuery(sql)) {
+            while (rs.next()) {
+                Addressee addressee = new Addressee();
+                addressee.setName(rs.getString(1));
+                addressee.setPhoneNumber(Optional.ofNullable(rs.getString(2)));
+                addressee.setEmail(Optional.ofNullable(rs.getString(3)));
+                addressee.setAddress(address);
+                addresseeList.add(addressee);
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+        return addresseeList;
+    }
+
 
     void insertPropertyEntry(PropertyEntry entry) throws SQLException {
         System.out.println(entry);
         insertAddress(entry.getAddress());
-        /*List<Addressee> addressees = entry.getAddressees().orElse(new ArrayList());
+        List<Addressee> addressees = entry.getAddressees().orElse(new ArrayList());
         for (Addressee addressee : addressees) {
             insertAddressee(addressee);
-        }*/
+        }
         entry.setId(incrementAndGetMaxId("property_entry"));
         for (PriceHistoryEntry priceEntry : entry.getPriceHistories()) {
             insertPriceHistoryEntry(priceEntry, entry);
@@ -109,7 +131,7 @@ class RealEstateDAO extends GeneralDAO {
     }
 
     private void insertAddress(Address address) {
-        String sql = "Insert into address VALUES (?, ?, ?, ?, ?, ?);";
+        String sql = "Insert into address VALUES (?, ?, ?, ?, ?, ?, ?);";
         try (PreparedStatement stmnt = connection.prepareStatement(sql)) {
             stmnt.setString(1, address.getKixCode());
             stmnt.setString(2, address.getCountry());
@@ -117,6 +139,7 @@ class RealEstateDAO extends GeneralDAO {
             stmnt.setInt(4, address.getHouseNumber());
             stmnt.setString(5, address.getExtension());
             stmnt.setString(6, address.getPostalCode());
+            stmnt.setString(7, address.getCity());
             stmnt.execute();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -171,9 +194,10 @@ class RealEstateDAO extends GeneralDAO {
             entry.setId(rs.getInt(1));
             entry.setAddress(getAddress(rs.getString(2)));
             entry.setDate(LocalDate.parse(rs.getString(3)));
-            entry.setSold(rs.getInt(4) == 1 ? true : false);
+            entry.setSold(rs.getInt(4) == 1); // boolean is 0 for false 1 for true
             entry.setSellPrice(rs.getLong(5));
             entry.setPriceHistories(getPriceHistoryEntries(entry.getId()));
+            entry.setAddressees(Optional.ofNullable(getAddressees(entry.getAddress())));
         } catch (SQLException e) {
             e.getMessage();
             e.printStackTrace();

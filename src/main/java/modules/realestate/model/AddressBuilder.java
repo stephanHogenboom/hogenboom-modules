@@ -1,7 +1,5 @@
 package modules.realestate.model;
 
-import elements.AlertBox;
-
 public class AddressBuilder {
 
     private String country;
@@ -9,7 +7,8 @@ public class AddressBuilder {
     private String street;
     private int houseNumber;
     private String extension;
-    private  String postalCode;
+    private String postalCode;
+    private String city;
 
     public AddressBuilder setCountry(String country) {
         this.country = country;
@@ -42,6 +41,13 @@ public class AddressBuilder {
         return this;
     }
 
+    public AddressBuilder setCity(String city) {
+        this.city = city;
+        return this;
+    }
+
+
+
     public Address build() {
         return new Address(
                 this.country,
@@ -49,7 +55,8 @@ public class AddressBuilder {
                 this.street,
                 this.houseNumber,
                 this.extension,
-                this.postalCode
+                this.postalCode,
+                this.city
         );
     }
 

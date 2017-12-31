@@ -104,8 +104,8 @@ public class RealEstateOverView extends Module {
         });
 
 
-        Button editButton = new Button("edit");
-        editButton .setOnAction(e -> {
+        Button copyButton = new Button("copy");
+        copyButton .setOnAction(e -> {
             String name = propertyList.getSelectionModel().getSelectedItem();
             AddEntryScreen screen = new AddEntryScreen();
             screen.display(getPropertyEntryByName(name));
@@ -130,7 +130,7 @@ public class RealEstateOverView extends Module {
         });
 
         // add buttons and list to layout
-        propertyListButtonContainer.getChildren().addAll(addButton, deleteButton, editButton);
+        propertyListButtonContainer.getChildren().addAll(addButton, deleteButton, copyButton);
         propertyListContainer.getChildren().addAll(propertyList, propertyListButtonContainer);
 
         returnButton.setOnAction(e -> window.setScene(previousScene));

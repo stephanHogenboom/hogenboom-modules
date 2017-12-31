@@ -26,7 +26,7 @@ import java.util.List;
 
 public class AddEntryScreen extends Module {
 
-    TextField streetNameEntry, houseNumber, extension, postalCode, askingPrice, sellPrice;
+    TextField streetNameEntry, houseNumber, extension, postalCode, askingPrice, sellPrice, city;
     Validator validator = new Validator();
     CheckBox isSold;
     Stage window;
@@ -60,25 +60,37 @@ public class AddEntryScreen extends Module {
         extension = getTextField("extension");
         numberExtension.getChildren().addAll(houseNumber, extension, isSold);
         postalCode = getTextField("postal code");
+        city = getTextField("city");
 
-        Button occupant = new Button("add occupant");
-        Button addAddress = new Button("add address");
-        addAddress.setOnAction(e -> addProperty());
+        Button relation = new Button("add relation");
+        relation.setOnAction(e -> {
+            AddOrEditRelation screen = new AddOrEditRelation();
+            Address address = validateAddSetAddress();
+            if (address == null) return;
+            screen.display(address, (entry != null)? entry : new PropertyEntry());
+        });
+
+        Button saveEntry = new Button("save");
+        saveEntry.setOnAction(e -> addProperty(entry));
+
+        Button cancelButton = new Button("cancel");
+        cancelButton.setOnAction(e -> window.close());
 
 
         ButtonBar buttonBar = new ButtonBar();
-        buttonBar.getButtons().addAll(occupant, addAddress);
+        buttonBar.getButtons().addAll(relation, saveEntry, cancelButton);
 
-        vbox.getChildren().addAll(streetNameEntry, numberExtension, postalCode, askingPrice, sellPrice, buttonBar);
+
+        vbox.getChildren().addAll(streetNameEntry, numberExtension, postalCode, city, askingPrice, sellPrice, buttonBar);
         Scene scene = new Scene(vbox);
         if (entry != null) {
-            setEntryValues(entry);
+            setTextFieldValues(entry);
         }
         window.setScene(scene);
         window.showAndWait();
     }
 
-    public void setEntryValues(PropertyEntry entry) {
+    public void setTextFieldValues(PropertyEntry entry) {
         Address address = entry.getAddress();
         isSold.setSelected(entry.isSold());
         houseNumber.setText(String.valueOf(address.getHouseNumber()));
@@ -87,45 +99,56 @@ public class AddEntryScreen extends Module {
         sellPrice.setText(String.valueOf(entry.getSellPrice()));
         askingPrice.setText(entry.getLatestPriceHistoryEntry().getAskingPrice().toString());
         postalCode.setText(address.getPostalCode());
+        city.setText(address.getCity());
     }
 
-
-    private void addProperty() {
+    private Address validateAddSetAddress() {
         Address address = new Address();
-        List<TextField> list = new ArrayList<>(Arrays.asList(streetNameEntry, houseNumber, postalCode));
+        //All mandatory address information should be present
+        List<TextField> list = new ArrayList<>(Arrays.asList(streetNameEntry, houseNumber, postalCode, city));
         for (TextField field : list) {
             if (field.getText() == null || field.getText().trim().isEmpty()) {
                 AlertBox.display("error", field.getPromptText() + " must be non empty!");
-                return;
+                return null;
             }
         }
+
+        // postal code should match "\d{4}"
         String postalCodeText = postalCode.getText().toUpperCase();
         if (!isValidPostalCode(postalCodeText)) {
             AlertBox.display("error", postalCode.getText() + "is not a valid postalcode!");
-            return;
+            return null;
         }
 
         AddressBuilder bldr = new AddressBuilder();
 
         if (!validator.isNumeric(houseNumber.getText())) {
             AlertBox.display("error", "house number is not numeric!");
-            return;
+            return null;
         }
 
         String ext = (extension.getText() != null || !extension.getText().isEmpty()) ? extension.getText() : "";
-        System.out.println(postalCode.getText());
         bldr.setCountry("NL")
                 .setPostalCode(postalCodeText)
                 .setStreet(streetNameEntry.getText())
                 .setHouseNumber(Integer.parseInt(houseNumber.getText()))
                 .setExtension(ext)
+                .setCity(city.getText())
                 .setKixCode();
+        return bldr.build();
+    }
+
+
+    private void addProperty(PropertyEntry oldEntry) {
+        Address address = validateAddSetAddress();
+        if (address == null) return;
 
         PropertyEntry entry = new PropertyEntry();
-        entry.setAddress(bldr.build());
+        entry.setAddress(address);
         entry.setDate(LocalDate.now());
         entry.setSold(isSold.isSelected());
         PriceHistoryEntry priceHistoryEntry = new PriceHistoryEntry();
+        // prices should be numeric
         if (!validator.isNumeric(askingPrice.getText())) {
             AlertBox.display("error", "asking price is not numeric!");
             return;
@@ -138,6 +161,12 @@ public class AddEntryScreen extends Module {
                 return;
             }
             entry.setSellPrice(Long.parseLong(sellPrice.getText()));
+        }
+
+        // you cannot add a property with the same address twice on one day
+        if (oldEntry != null && oldEntry.getDate().equals(LocalDate.now()) && entry.getAddress().getKixCode().equals(oldEntry.getAddress().getKixCode())) {
+            AlertBox.display("error", "an Property Entree for this address on this date already exists!");
+            return;
         }
 
         List<PriceHistoryEntry> priceList = new ArrayList<>();

@@ -1,6 +1,7 @@
 package modules.realestate.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,7 +10,7 @@ public class PropertyEntry {
     private int id;
     private Address address;
     private List<PriceHistoryEntry> priceHistories;
-    private Optional<List<Addressee>> addressees;
+    private Optional<List<Addressee>> addressees = Optional.ofNullable(new ArrayList<>());
     private LocalDate date;
     private boolean isSold;
     private Long sellPrice;

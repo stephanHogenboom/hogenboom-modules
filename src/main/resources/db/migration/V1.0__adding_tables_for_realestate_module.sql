@@ -14,6 +14,7 @@ CREATE TABLE address (
     house_number INTEGER NOT NULL,
     extension TEXT,
     postal_code TEXT NOT NULL,
+    city TEXT NOT NULL,
     PRIMARY KEY (kix_code) ON CONFLICT IGNORE
     );
 
