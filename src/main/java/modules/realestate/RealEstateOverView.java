@@ -7,8 +7,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import modules.Module;
 import modules.realestate.model.Address;
@@ -19,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class RealEstateOverView extends Module {
@@ -26,8 +29,11 @@ public class RealEstateOverView extends Module {
     private final Button returnButton = new Button("return");
     TableView<String> propertyInformationTable;
     private final RealEstateDAO dao = new RealEstateDAO();
+    private final ListView<String> addresseeListview = new ListView<>();
     private List<PropertyEntry> entries;
-    private Label houseName, askingPrice, sellPrice;
+    private Label houseName, askingPrice, sellPrice, emailOfAddressee, numberOfAddressee, nameOfAddressee;
+    private PropertyEntry selectedEntry = new PropertyEntry();
+    private HashMap<String, Addressee> addressees = new HashMap<>();
 
     public void display(Stage primaryStage, Scene previousScene) {
         window = primaryStage;
@@ -45,16 +51,27 @@ public class RealEstateOverView extends Module {
 
         //initiate house list
         ListView<String> propertyList = new ListView<>();
-        setPropertyList(propertyList);
+        setPropertyListAndEntriesAndAddressees(propertyList);
         propertyList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         propertyList.setOnMousePressed(e -> {
-                    String selectedItemName = propertyList.getSelectionModel().getSelectedItems().get(0);
-                    PropertyEntry entry = getPropertyEntryByName(selectedItemName);
-                    setLabels(entry);
-                }
-
-        );
+            List<String> items = (propertyList.getSelectionModel().getSelectedItems());
+            if (items == null || items.isEmpty()) {
+                return;
+            }
+            String selectedItemName = propertyList.getSelectionModel().getSelectedItems().get(0);
+            selectedEntry = getPropertyEntryByName(selectedItemName);
+            setLabels(selectedEntry);
+            // add addressees toi Listview
+            if (selectedEntry == null) {
+                return;
+            }
+            List<Addressee> addresseeList = selectedEntry.getAddressees().orElse(new ArrayList<>());
+            addresseeListview.getItems().removeAll(addresseeListview.getItems());
+            for (Addressee addressee : addresseeList) {
+                addresseeListview.getItems().add(addressee.getName());
+            }
+        });
 
         VBox propertyListContainer = new VBox();
         propertyListContainer.setMaxWidth(250);
@@ -88,9 +105,27 @@ public class RealEstateOverView extends Module {
         //set ImageView
         ImageView propertyPortait = getImageView();
 
+        // information in the centre
         HBox centreInfoBox = new HBox();
-        ListView<String> addressees = new ListView<>();
-        centreInfoBox.getChildren().addAll(addressees);
+        centreInfoBox.setPadding(new Insets(10, 10, 10, 10));
+        VBox relationInfo = new VBox();
+        relationInfo.setPadding(new Insets(0, 10, 10, 10));
+        nameOfAddressee = getLabel("name: ");
+        numberOfAddressee = getLabel("number: ");
+        emailOfAddressee = getLabel("number: ");
+        relationInfo.getChildren().addAll(nameOfAddressee, numberOfAddressee, emailOfAddressee);
+
+        addresseeListview.setOnMousePressed(e -> {
+            List<String> items = (addresseeListview.getSelectionModel().getSelectedItems());
+            if (items == null || items.isEmpty()) {
+                return;
+            }
+            setAddresseeLabels(addressees.get(items.get(0)));
+        });
+
+
+
+        centreInfoBox.getChildren().addAll(addresseeListview, relationInfo);
 
         centreInformationContainer.getChildren().addAll(centreInformationTop, centreInfoBox);
         if (propertyPortait != null) {
@@ -104,16 +139,16 @@ public class RealEstateOverView extends Module {
         addButton.setOnAction(e -> {
             AddEntryScreen screen = new AddEntryScreen();
             screen.display(null);
-            setPropertyList(propertyList);
+            setPropertyListAndEntriesAndAddressees(propertyList);
         });
 
 
         Button copyButton = new Button("copy");
-        copyButton .setOnAction(e -> {
+        copyButton.setOnAction(e -> {
             String name = propertyList.getSelectionModel().getSelectedItem();
             AddEntryScreen screen = new AddEntryScreen();
             screen.display(getPropertyEntryByName(name));
-            setPropertyList(propertyList);
+            setPropertyListAndEntriesAndAddressees(propertyList);
         });
 
         Button deleteButton = new Button("delete");
@@ -134,18 +169,7 @@ public class RealEstateOverView extends Module {
         });
 
         Button infoButton = new Button("info");
-        infoButton.setOnAction(e ->  {
-            addressees.getItems().removeAll(addressees.getItems());
-            String selectedItem = propertyList.getSelectionModel().getSelectedItems().get(0);
-            PropertyEntry entry = getPropertyEntryByName(selectedItem);
-            List<Addressee> addresseeList= entry.getAddressees().orElse(new ArrayList<>());
-            for (Addressee addressee : addresseeList) {
-                addressees.getItems().add(addressee.getName());
-            }
-        });
-
-
-
+        infoButton.setOnAction(e -> {});
 
 
         // add buttons and list to layout
@@ -167,12 +191,19 @@ public class RealEstateOverView extends Module {
         window.show();
     }
 
-    private void setPropertyList(ListView<String> propertyList) {
+    private void setPropertyListAndEntriesAndAddressees(ListView<String> propertyList) {
         List<String> items = propertyList.getItems();
         entries = dao.getPropertyEntries();
         List<String> propertyNames = new ArrayList<>();
         entries.stream().filter(e -> !items.contains(e.getName())).forEach(item -> propertyNames.add(item.getName()));
         propertyList.getItems().addAll(propertyNames);
+        for (PropertyEntry entry : entries) {
+            if (entry.getAddressees().isPresent()) {
+                for (Addressee addressee : entry.getAddressees().get()){
+                    addressees.put(addressee.getName(), addressee);
+                }
+            }
+        }
     }
 
     private ImageView getImageView() {
@@ -206,5 +237,16 @@ public class RealEstateOverView extends Module {
             }
         }
         return null;
+    }
+
+    private void setAddresseeLabels(Addressee addressee) {
+        if (addressee == null) {
+            AlertBox.display("404", "the selected addressee relation was not found!");
+            return;
+        }
+        System.out.println(addressee);
+        nameOfAddressee.setText(String.format("name: %s", addressee.getName()));
+        numberOfAddressee.setText(String.format("number: %s", addressee.getPhoneNumber().orElse("")));
+        emailOfAddressee.setText(String.format("email: %s", addressee.getEmail().orElse("")));
     }
 }

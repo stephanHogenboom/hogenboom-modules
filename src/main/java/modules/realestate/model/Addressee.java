@@ -40,4 +40,14 @@ public class Addressee {
     public void setEmail(Optional<String> email) {
         this.email = email;
     }
+
+    @Override
+    public String toString() {
+        return "Addressee{" +
+                "name='" + name + '\'' +
+                ", address=" + address +
+                ", phoneNumber=" + phoneNumber +
+                ", email=" + email +
+                '}';
+    }
 }
