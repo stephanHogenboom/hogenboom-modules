@@ -1,0 +1,27 @@
+.root {
+    -fx-background-color: #383838;
+    -fx-font-size: 11pt;
+}
+
+.button {
+    -fx-color: #59f442;
+    -fx-text-fill: white;
+    -fx-pref-width: 250px;
+    -fx-background-radius: 4;
+}
+
+.label {
+    -fx-background-color: #59f442;
+    -fx-text-fill: white;
+    -fx-pref-width: 300px;
+}
+
+.text-field {
+    -fx-background-color: #59f442;
+    -fx-text-fill: black;
+    -fx-pref-width: 150px;
+}
+
+.check-box {
+    -fx-text-fill: black;
+}
