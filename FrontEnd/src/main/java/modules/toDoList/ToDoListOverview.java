@@ -1,6 +1,6 @@
-package main.java.modules.toDoList;
+package modules.toDoList;
 
-import main.java.elements.AlertBox;
+import elements.AlertBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -9,9 +9,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import main.java.modules.Module;
-import main.java.modules.toDoList.model.Task;
-import main.java.util.Validator;
+import modules.Module;
+import modules.toDoList.model.Task;
+import util.Validator;
 
 import java.time.LocalDate;
 

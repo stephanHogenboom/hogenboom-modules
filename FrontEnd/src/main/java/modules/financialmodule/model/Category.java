@@ -1,4 +1,4 @@
-package main.java.modules.financialmodule.model;
+package modules.financialmodule.model;
 
 public class Category {
    private String name;

@@ -1,7 +1,7 @@
-package main.java.modules.realestate;
+package modules.realestate;
 
 import com.google.common.annotations.VisibleForTesting;
-import main.java.elements.AlertBox;
+import elements.AlertBox;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
@@ -9,11 +9,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import main.java.modules.Module;
-import main.java.modules.realestate.model.Address;
-import main.java.modules.realestate.model.Addressee;
-import main.java.modules.realestate.model.PropertyEntry;
-import main.java.util.ValidatorKotlin;
+import modules.Module;
+import modules.realestate.model.Address;
+import modules.realestate.model.Addressee;
+import modules.realestate.model.PropertyEntry;
+import util.ValidatorKotlin;
 
 import java.util.ArrayList;
 import java.util.List;

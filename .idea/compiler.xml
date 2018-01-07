@@ -6,10 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="hogenboom-modules" />
+        <module name="CommunicationModule" />
+        <module name="FrontEnd" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="CommunicationModule" target="1.8" />
+      <module name="FrontEnd" target="1.9" />
       <module name="hogenboom-modules" target="1.9" />
     </bytecodeTargetLevel>
   </component>

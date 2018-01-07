@@ -1,4 +1,4 @@
-package main.test.util;
+package util;
 
 
 
@@ -9,7 +9,7 @@ import java.util.Properties;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
-import static main.java.util.EnvironmentUtils.getEnvOrPropertyOrDefault;
+import static util.EnvironmentUtils.getEnvOrPropertyOrDefault;
 
 public class EnvironmentUtilsTest {
 

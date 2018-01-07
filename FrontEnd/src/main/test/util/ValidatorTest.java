@@ -1,6 +1,6 @@
-package main.test.util;
+package util;
 
-import main.java.util.ValidatorKotlin;
+import util.ValidatorKotlin;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package main.java.modules;
+package modules;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
-import main.java.modules.financialmodule.model.FinancialEntry;
+import modules.financialmodule.model.FinancialEntry;
 
 public abstract class Module {
 

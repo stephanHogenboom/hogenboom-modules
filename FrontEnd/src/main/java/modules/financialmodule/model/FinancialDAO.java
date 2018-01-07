@@ -1,6 +1,6 @@
-package main.java.modules.financialmodule.model;
+package modules.financialmodule.model;
 
-import main.java.acces.GeneralDAO;
+import acces.GeneralDAO;
 
 import java.sql.*;
 import java.time.LocalDateTime;

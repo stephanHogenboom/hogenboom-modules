@@ -1,8 +1,8 @@
-package main.java.modules.financialmodule;
+package modules.financialmodule;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import main.java.elements.AlertBox;
+import elements.AlertBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -12,11 +12,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import main.java.modules.Module;
-import main.java.modules.financialmodule.model.Category;
-import main.java.modules.financialmodule.model.FinancialDAO;
-import main.java.modules.financialmodule.model.FinancialEntry;
-import main.java.util.ValidatorKotlin;
+import modules.Module;
+import modules.financialmodule.model.Category;
+import modules.financialmodule.model.FinancialDAO;
+import modules.financialmodule.model.FinancialEntry;
+import util.ValidatorKotlin;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

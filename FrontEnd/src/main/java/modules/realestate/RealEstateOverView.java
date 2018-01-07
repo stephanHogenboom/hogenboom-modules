@@ -1,7 +1,7 @@
-package main.java.modules.realestate;
+package modules.realestate;
 
-import main.java.elements.AlertBox;
-import main.java.elements.ConfirmationBox;
+import elements.AlertBox;
+import elements.ConfirmationBox;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -12,10 +12,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import main.java.modules.Module;
-import main.java.modules.realestate.model.Address;
-import main.java.modules.realestate.model.Addressee;
-import main.java.modules.realestate.model.PropertyEntry;
+import modules.Module;
+import modules.realestate.model.Address;
+import modules.realestate.model.Addressee;
+import modules.realestate.model.PropertyEntry;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

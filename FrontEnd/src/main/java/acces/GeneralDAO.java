@@ -1,4 +1,4 @@
-package main.java.acces;
+package acces;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

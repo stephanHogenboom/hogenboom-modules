@@ -1,4 +1,4 @@
-package main.java.util
+package util
 
 import kotlin.text.matches
 import kotlin.text.toRegex

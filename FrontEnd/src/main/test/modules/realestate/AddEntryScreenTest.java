@@ -1,6 +1,6 @@
-package main.test.modules.realestate;
+package modules.realestate;
 
-import main.java.modules.realestate.AddEntryScreen;
+import modules.realestate.AddEntryScreen;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -1,13 +1,12 @@
-package main.java;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import main.java.modules.financialmodule.FinancialModule;
-import main.java.modules.realestate.RealEstateOverView;
-import main.java.modules.toDoList.ToDoListOverview;
+import modules.financialmodule.FinancialModule;
+import modules.realestate.RealEstateOverView;
+import modules.toDoList.ToDoListOverview;
 import org.flywaydb.core.Flyway;
 import org.sqlite.SQLiteConfig;
 import org.sqlite.SQLiteDataSource;
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static main.java.util.EnvironmentUtils.getEnvOrPropertyOrDefault;
+import static util.EnvironmentUtils.getEnvOrPropertyOrDefault;
 
 public class App extends Application {
 
@@ -24,7 +23,7 @@ public class App extends Application {
     private Button menuButton;
     private List<String> buttonlist = new ArrayList<>(Arrays.asList("Financial", "Real estate", "To Do List"));
     private Scene scene;
-    private static final String dataBaseUrl = getEnvOrPropertyOrDefault("BASE_URL", "jdbc:sqlite:financial.db");
+    private static final String dataBaseUrl = getEnvOrPropertyOrDefault("CONNECTION_STRING", "jdbc:sqlite:financial.db");
     private static final String migrationLocation = getEnvOrPropertyOrDefault("MIGRATION_LOCATION", "classpath:db/migration");
 
     public static void main(String... args) {

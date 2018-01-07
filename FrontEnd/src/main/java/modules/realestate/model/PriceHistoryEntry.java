@@ -1,4 +1,4 @@
-package main.java.modules.realestate.model;
+package modules.realestate.model;
 
 import java.time.LocalDate;
 

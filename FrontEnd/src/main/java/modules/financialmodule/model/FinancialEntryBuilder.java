@@ -1,6 +1,6 @@
-package main.java.modules.financialmodule.model;
+package modules.financialmodule.model;
 
-import main.java.util.Validator;
+import util.Validator;
 
 import java.time.LocalDateTime;
 

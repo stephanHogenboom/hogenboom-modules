@@ -1,10 +1,10 @@
-package main.java.modules.realestate;
+package modules.realestate;
 
-import main.java.acces.GeneralDAO;
-import main.java.modules.realestate.model.Address;
-import main.java.modules.realestate.model.Addressee;
-import main.java.modules.realestate.model.PriceHistoryEntry;
-import main.java.modules.realestate.model.PropertyEntry;
+import acces.GeneralDAO;
+import modules.realestate.model.Address;
+import modules.realestate.model.Addressee;
+import modules.realestate.model.PriceHistoryEntry;
+import modules.realestate.model.PropertyEntry;
 
 import java.sql.*;
 import java.time.LocalDate;
