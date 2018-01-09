@@ -35,7 +35,7 @@ public class FinancialModule extends Module {
     private final String CATEGORY_TABLE_NAME = "category";
 
     public void display(Stage primaryStage, Scene previousScene) {
-        window = setWindowProperties(primaryStage, "Financial app", 10000, 700 );
+        window = setWindowProperties(primaryStage, "Financial app", 1000, 700 );
 
         BorderPane layout = new BorderPane();
         VBox excellLayout = new VBox();

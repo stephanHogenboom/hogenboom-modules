@@ -100,8 +100,8 @@ public class FinancialDAO extends GeneralDAO {
         return null;
     }
 
-    public Integer incrementAndGetId(String name) {
-        String sql = String.format("SELECT max(id) FROM %s", name);
+    public Integer incrementAndGetId(String tableName) {
+        String sql = String.format("SELECT max(id) FROM %s", tableName);
         try {
             Statement stmnt = connection.createStatement();
             ResultSet rs = stmnt.executeQuery(sql);

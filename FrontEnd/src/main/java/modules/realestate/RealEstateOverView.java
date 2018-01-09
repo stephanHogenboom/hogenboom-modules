@@ -38,7 +38,7 @@ public class RealEstateOverView extends Module {
     public void display(Stage primaryStage, Scene previousScene) {
         window = primaryStage;
         window.setTitle("Real Estate module");
-        window.setMinWidth(1000);
+        window.setMinWidth(800);
         window.setMinHeight(500);
 
         //Adding centre content

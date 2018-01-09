@@ -8,6 +8,7 @@ import modules.financialmodule.FinancialModule;
 import modules.realestate.RealEstateOverView;
 import modules.toDoList.ToDoListOverview;
 import org.flywaydb.core.Flyway;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.sqlite.SQLiteConfig;
 import org.sqlite.SQLiteDataSource;
 
@@ -17,6 +18,7 @@ import java.util.List;
 
 import static util.EnvironmentUtils.getEnvOrPropertyOrDefault;
 
+@SpringBootApplication
 public class App extends Application {
 
     private Stage window;
@@ -68,7 +70,7 @@ public class App extends Application {
 
         //create scene
         scene = new Scene(layout);
-        scene.getStylesheets().addAll("main/resources/index.css");
+        scene.getStylesheets().addAll("index.css");
 
         window.setScene(scene);
         window.show();

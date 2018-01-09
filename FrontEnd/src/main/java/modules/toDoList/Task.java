@@ -1,4 +1,4 @@
-package modules.toDoList.model;
+package modules.toDoList;
 
 import java.time.LocalDate;
 import java.util.Optional;
