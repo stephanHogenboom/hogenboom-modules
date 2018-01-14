@@ -65,7 +65,7 @@ public class AddEntryScreen extends Module {
         Button relation = new Button("add relation");
         relation.setOnAction(e -> {
             AddOrEditRelationScreen screen = new AddOrEditRelationScreen();
-            Address address = validateAddSetAddress();
+            Address address = validateAndSetAddress();
             if (address == null) return;
             screen.display(address, (entry != null)? entry : new PropertyEntry());
         });
@@ -102,7 +102,7 @@ public class AddEntryScreen extends Module {
         city.setText(address.getCity());
     }
 
-    private Address validateAddSetAddress() {
+    private Address validateAndSetAddress() {
         Address address = new Address();
         //All mandatory address information should be present
         List<TextField> list = new ArrayList<>(Arrays.asList(streetNameEntry, houseNumber, postalCode, city));
@@ -140,7 +140,7 @@ public class AddEntryScreen extends Module {
 
 
     private void addProperty(PropertyEntry oldEntry) {
-        Address address = validateAddSetAddress();
+        Address address = validateAndSetAddress();
         if (address == null) return;
 
         PropertyEntry entry = new PropertyEntry();

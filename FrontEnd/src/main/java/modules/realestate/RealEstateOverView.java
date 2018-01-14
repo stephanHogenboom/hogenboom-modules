@@ -186,7 +186,7 @@ public class RealEstateOverView extends Module {
         layout.setLeft(propertyListContainer);
         layout.setBottom(bottomButtonBar);
         Scene scene = new Scene(layout);
-        scene.getStylesheets().addAll("main/resources/index.css");
+        scene.getStylesheets().addAll("index.css");
         window.setScene(scene);
         window.show();
     }
@@ -243,7 +243,7 @@ public class RealEstateOverView extends Module {
 
     private void setAddresseeLabels(Addressee addressee) {
         if (addressee == null) {
-            AlertBox.display("404", "the selected addressee relation was not found!");
+            AlertBox.display("Error", "the selected addressee relation was not found!");
             return;
         }
         System.out.println(addressee);
