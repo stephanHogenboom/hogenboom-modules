@@ -1,7 +1,5 @@
 package modules.financialmodule;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import elements.AlertBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,7 +18,8 @@ import util.ValidatorKotlin;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 
 public class FinancialModule extends Module {
 
@@ -30,27 +29,43 @@ public class FinancialModule extends Module {
     TextField nameInput, valueInput;
     ComboBox<String> categories;
     ValidatorKotlin validator = new ValidatorKotlin();
-    FinancialDAO dao = new FinancialDAO();
+    private final FinancialDAO dao;
+    private List<FinancialEntry> entryList;
     private final String FINANCIAL_ENTRY_TABLE_NAME = "financial_entry";
     private final String CATEGORY_TABLE_NAME = "category";
 
+    private final PieChart pieChart;
+
+    private final BarChart<String, Number> barChart;
+    private final CategoryAxis xAxis;
+    private final NumberAxis yAxis;
+    private XYChart.Series series1;
+
+    private ObservableList data;
+
+    // constructor zet alle final objects
+    public FinancialModule(){
+        this.dao       = new FinancialDAO();
+        this.entryList = this.dao.getAllFinancialEntries();
+
+        this.pieChart = new PieChart();
+
+        this.xAxis    = new CategoryAxis();
+        this.yAxis    = new NumberAxis();
+        this.barChart = new BarChart<>( xAxis, yAxis );
+        this.series1  = new XYChart.Series();
+    }
+
     public void display(Stage primaryStage, Scene previousScene) {
+
         window = setWindowProperties(primaryStage, "Financial app", 1000, 700 );
 
         BorderPane layout = new BorderPane();
         VBox excellLayout = new VBox();
 
-        /*
-         * Start Excel Sheet
-         */
-
-        //name column
         TableColumn<FinancialEntry, String> nameColumn = addColumn("name");
-        //Category column
         TableColumn<FinancialEntry, Category> categoryColumn = addColumn("category");
-        //valueColumn
         TableColumn<FinancialEntry, Double> valueColumn = addColumn("value");
-        //DateColumn
         TableColumn<FinancialEntry, LocalDateTime> dateColumn = addColumn("date");
 
         //initializeTable
@@ -73,31 +88,22 @@ public class FinancialModule extends Module {
         }
 
         addButton = new Button("add");
-        addButton.setOnAction(e -> addEntry());
+        addButton.setOnAction(e -> {
+            addEntry();
+            refreshPiechart();
+            refreshBarChart();
+        });
 
         HBox inputAndButtonsBox = new HBox();
         inputAndButtonsBox.getChildren().addAll(nameInput, categories, valueInput, addButton);
 
         excellLayout.getChildren().addAll(table, inputAndButtonsBox);
 
-        /*
-         * End Excel Sheet
-         * Start Pie and Bar Chart
-         */
-
-        PieChart pie = getPieChart();
-        BarChart bar = getBarChart();
+        setDataPieChart();
+        setBarChartData();
 
         VBox pieAndBarChart = new VBox();
-        pieAndBarChart.getChildren().addAll(pie, bar);
-
-        /*
-         *  End Pie and Bar Chart
-         */
-
-        /*
-         * button
-         */
+        pieAndBarChart.getChildren().addAll(this.pieChart, this.barChart);
 
         ButtonBar buttonBar = new ButtonBar();
         returnButton = new Button("retrun");
@@ -113,6 +119,8 @@ public class FinancialModule extends Module {
         window.setScene(financialScreen);
         window.show();
     }
+
+
 
     private ObservableList<FinancialEntry> getFinancialEntries() {
         ObservableList<FinancialEntry> entries = FXCollections.observableArrayList();
@@ -148,86 +156,53 @@ public class FinancialModule extends Module {
         table.getItems().add(entry);
         dao.insertEntry(entry);
         dao.insertCategorie(category);
+        entryList.add(entry);
         return true;
 
     }
 
-    private PieChart getPieChart() {
-
-        ArrayList<FinancialEntry> entries = dao.getAllFinancialEntries();
-        ArrayList<Category> categories = dao.getAllCategories();
-
-        Multimap<String, FinancialEntry> entryByCategory = ArrayListMultimap.create();
-        ArrayList<PieChart.Data> dataList = new ArrayList<>();
-        for (FinancialEntry entry : entries) {
-            System.out.println("name =" + entry.getName());
-            System.out.println("categorie =" + entry.getCategory());
-            entryByCategory.put(entry.getCategory().getName(), entry);
-        }
-
-        for (Category category : categories) {
-            Collection<FinancialEntry> entrylistOfCategory = entryByCategory.get(category.getName());
-            double totalValue = 0;
-
-            for (FinancialEntry entry : entrylistOfCategory) {
-                totalValue += entry.getValue();
-            }
-            dataList.add(new PieChart.Data(category.getName(), totalValue));
-        }
-
-        ObservableList<PieChart.Data> pieChartData =
-                FXCollections.observableArrayList(
-                        dataList);
-        final PieChart chart = new PieChart(pieChartData);
-        chart.setTitle("Monthly overview");
-        return chart;
+    private void refreshPiechart() {
+        this.pieChart.setData(this.getPieChartData());
     }
 
-    private BarChart getBarChart() {
+    private void setDataPieChart() {
+        this.pieChart.setData(this.getPieChartData());
+        this.pieChart.setTitle("Monthly overview");
+    }
 
-        // TODO: get the actual values from the database
+    private ObservableList getPieChartData(){
+        ArrayList<PieChart.Data> dataList = new ArrayList<>();
+        this.getEntryData().forEach((k,v) -> dataList.add(new PieChart.Data(k, v)));
+        return FXCollections.observableArrayList(dataList);
+    }
 
-        final CategoryAxis xAxis = new CategoryAxis();
-        final NumberAxis yAxis = new NumberAxis();
-        final BarChart<String, Number> bc =
-                new BarChart<String, Number>(xAxis, yAxis);
-        bc.setTitle("Balance");
-        xAxis.setLabel("Month");
-        yAxis.setLabel("Value");
+    private HashMap<String, Double> getEntryData(){
+        HashMap<String, Double> exspensesByCategory = new HashMap<>();
+        entryList.forEach(
+                entry -> exspensesByCategory.compute(
+                        entry.getCategory().getName(),
+                        (k,v) -> v == null ? entry.getValue() : v + entry.getValue()
+                )
+        );
+        return exspensesByCategory;
+    }
 
-        XYChart.Series series1 = new XYChart.Series();
-        series1.setName("Income");
-        series1.getData().add(new XYChart.Data("Jan", 25601.34));
-        series1.getData().add(new XYChart.Data("Feb", 20148.82));
-        series1.getData().add(new XYChart.Data("Mar", 10000));
-        series1.getData().add(new XYChart.Data("Apr", 12000));
-        series1.getData().add(new XYChart.Data("May", 35407.15));
-        series1.getData().add(new XYChart.Data("Jun", 12000));
-        series1.getData().add(new XYChart.Data("Jul", 12000));
-        series1.getData().add(new XYChart.Data("Aug", 12000));
-        series1.getData().add(new XYChart.Data("Sept", 12000));
-        series1.getData().add(new XYChart.Data("Oct", 12000));
-        series1.getData().add(new XYChart.Data("Nov", 12000));
-        series1.getData().add(new XYChart.Data("Dec", 12000));
+    private void refreshBarChart(){
+        this.getBarChartData();
+        this.barChart.getData().add(this.series1);
+    }
 
-        XYChart.Series series2 = new XYChart.Series();
-        series2.setName("Costs");
-        series2.getData().add(new XYChart.Data("Jan", 57401.85));
-        series2.getData().add(new XYChart.Data("Feb", 41941.19));
-        series2.getData().add(new XYChart.Data("Mar", 45263.37));
-        series2.getData().add(new XYChart.Data("Apr", 117320.16));
-        series2.getData().add(new XYChart.Data("May", 35407.15));
-        series2.getData().add(new XYChart.Data("Jun", 12000));
-        series2.getData().add(new XYChart.Data("Jul", 12000));
-        series2.getData().add(new XYChart.Data("Aug", 12000));
-        series2.getData().add(new XYChart.Data("Sept", 12000));
-        series2.getData().add(new XYChart.Data("Oct", 12000));
-        series2.getData().add(new XYChart.Data("Nov", 12000));
-        series2.getData().add(new XYChart.Data("Dec", 12000));
+    private void setBarChartData() {
+        this.barChart.setTitle("Balance");
+        this.xAxis.setLabel("Month");
+        this.yAxis.setLabel("Value");
+        this.series1.setName("Costs");
+        this.getEntryData().forEach((k,v) -> this.series1.getData().add(new XYChart.Data(k, v)));
+        this.barChart.getData().addAll(this.series1);
+    }
 
-
-        bc.getData().addAll(series1, series2);
-        return bc;
+    private void getBarChartData(){
+        this.getEntryData().forEach((k,v) -> this.series1.getData().add(new XYChart.Data(k, v)));
     }
 
 
