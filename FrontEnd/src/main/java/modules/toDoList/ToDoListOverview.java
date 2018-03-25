@@ -3,12 +3,10 @@ package modules.toDoList;
 import elements.AlertBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import modules.Module;
 import util.Validator;
 
@@ -16,29 +14,24 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class ToDoListOverview extends Module {
-    private Stage window;
     private TableView<Task> table;
-    private TextField name, effort;
+    private TextField nameTextField, effortTextField;
     private Validator validator = new Validator();
     private final ObservableList<Task> tasks = FXCollections.observableArrayList();
     private final ToDoListDao dao = new ToDoListDao();
 
-    public void display(Stage primaryStage, Scene previousScene) {
-
-        window = setWindowProperties(primaryStage, "to do list", 1000, 500);
-
-
-        Button returnButton = new Button("return");
-        returnButton.setOnAction(ae -> primaryStage.setScene(previousScene));
-
+    public BorderPane display() {
         ButtonBar buttonBar = new ButtonBar();
 
 
         setUpTable();
-        name = getTextField("textField");
-        effort = getTextField("effort");
+        nameTextField = getTextField("textField");
+        effortTextField = getTextField("effortTextField");
         Button addTaskButton = new Button("add task");
         addTaskButton.setOnAction(e -> addTask());
+        Button completeButton = new Button("complete");
+        completeButton.setOnAction(e -> completeTask(table.getSelectionModel().getSelectedItem()));
+
         Button deleteButton = new Button("Delete");
         deleteButton.setOnAction(e -> {
             dao.deleteTask(table.getSelectionModel().getSelectedItem());
@@ -46,13 +39,13 @@ public class ToDoListOverview extends Module {
         });
 
         HBox fieldsAndAddButton = new HBox();
-        fieldsAndAddButton.getChildren().addAll(name,effort);
+        fieldsAndAddButton.getChildren().addAll(nameTextField, effortTextField);
 
         VBox centreDivider = new VBox();
 
 
 
-        buttonBar.getButtons().addAll(addTaskButton, deleteButton, returnButton);
+        buttonBar.getButtons().addAll(addTaskButton, deleteButton, completeButton);
         centreDivider.getChildren().addAll(table, fieldsAndAddButton, buttonBar);
 
 
@@ -60,10 +53,7 @@ public class ToDoListOverview extends Module {
 
         mainlayout.setCenter(centreDivider);
 
-
-        Scene toDoListScene = new Scene(mainlayout);
-        window.setScene(toDoListScene);
-        window.show();
+        return mainlayout;
     }
 
     private void setUpTable() {
@@ -84,13 +74,25 @@ public class ToDoListOverview extends Module {
         return tasks;
     }
 
+    private void completeTask(Task task) {
+        try {
+            dao.updateTask(task);
+            table.setItems(getTasks());
+        } catch (Exception e) {
+            AlertBox.display("error while updating task: %s", e.getMessage());
+        }
+
+
+    }
+
+
     private void addTask() {
-        String nameText = name.getText();
-        if (effort.getText() == null || effort.getText().trim().isEmpty() || !validator.isNumeric(effort.getText())) {
-            AlertBox.display("error", "effort must be numeric and non empty");
+        String nameText = nameTextField.getText();
+        if (effortTextField.getText() == null || effortTextField.getText().trim().isEmpty() || !validator.isNumeric(effortTextField.getText())) {
+            AlertBox.display("error", "effortTextField must be numeric and non empty");
             return;
         }
-        int effortInt = Integer.parseInt(effort.getText());
+        int effortInt = Integer.parseInt(effortTextField.getText());
         Task task = new Task(0, nameText, effortInt, LocalDate.now(), null);
         dao.InsertTask(task);
         table.setItems(getTasks());

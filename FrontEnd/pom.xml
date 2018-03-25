@@ -40,8 +40,33 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <executions>
+                    <execution>
+                        <id>run application</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>cn.keepfight.intro.FXParamApp</mainClass>
+                            <arguments>
+                                <!--<argument>-Dsun.java2d.opengl=true</argument>-->
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.7.0</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
                 <executions>
                     <execution>
                         <id>compile</id>
@@ -57,11 +82,19 @@
                             <goal>testCompile</goal>
                         </goals>
                     </execution>
+                    <execution>
+                    <phase>package</phase>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <addClasspath>true</addClasspath>
+                                <classpathPrefix>lib/</classpathPrefix>
+                                <mainClass>front-end.App</mainClass>
+                            </manifest>
+                        </archive>
+                    </configuration>
+                </execution>
                 </executions>
-                <configuration>
-                    <source>1.9</source>
-                    <target>1.9</target>
-                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -104,11 +137,13 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
+            <version>5.0.2.RELEASE</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
+            <version>5.0.0.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

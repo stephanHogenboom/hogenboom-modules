@@ -1,7 +1,9 @@
-
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import modules.financialmodule.FinancialModule;
@@ -23,10 +25,14 @@ public class App extends Application {
 
     private Stage window;
     private Button menuButton;
-    private List<String> buttonlist = new ArrayList<>(Arrays.asList("Financial", "Real estate", "To Do List"));
+    private List<String> buttonlist = new ArrayList<>(Arrays.asList("Financial"));
     private Scene scene;
+    private final BorderPane main = new BorderPane();
+    private TabPane tabMainScreen = new TabPane();
     private static final String dataBaseUrl = getEnvOrPropertyOrDefault("CONNECTION_STRING", "jdbc:sqlite:financial.db");
     private static final String migrationLocation = getEnvOrPropertyOrDefault("MIGRATION_LOCATION", "classpath:db/migration");
+    private final RealEstateOverView realEstateOverViewInitObject = new RealEstateOverView();
+    private final ToDoListOverview toDoListOverviewInitObject = new ToDoListOverview();
 
     public static void main(String... args) {
         configureFlywayAndMigrateDataBase();
@@ -56,11 +62,23 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
         window = primaryStage;
         window.setTitle("modules application");
-        window.setWidth(250);
-        window.setHeight(200);
+        window.setWidth(1250);
+        window.setHeight(800);
 
         // create layout
         VBox layout = new VBox();
+
+        Tab tab = new Tab();
+        tab.setText("real estate");
+        BorderPane realEstateLayout = realEstateOverViewInitObject.initRealEstateModule();
+        tab.setContent(realEstateLayout);
+        tabMainScreen.getTabs().add(tab);
+
+        Tab tab2 = new Tab();
+        tab2.setText("to do list");
+        BorderPane toDoList = toDoListOverviewInitObject.display();
+        tab2.setContent(toDoList);
+        tabMainScreen.getTabs().add(tab2);
 
         for (String button : buttonlist) {
             menuButton = new Button(button);
@@ -68,8 +86,10 @@ public class App extends Application {
             layout.getChildren().add(menuButton);
         }
 
+        main.setLeft(layout);
+        main.setCenter(tabMainScreen);
         //create scene
-        scene = new Scene(layout);
+        scene = new Scene(main);
         scene.getStylesheets().addAll("index.css");
 
         window.setScene(scene);
@@ -81,12 +101,6 @@ public class App extends Application {
             case "Financial":
                 goToFinancialModule();
                 break;
-            case "Real estate":
-                goToRealEstateModule();
-                break;
-            case "To Do List":
-                goToToDoListModule();
-                break;
             default:
                 goToFinancialModule();
         }
@@ -97,13 +111,4 @@ public class App extends Application {
         module.display(window, scene);
     }
 
-    private void goToRealEstateModule() {
-        RealEstateOverView module = new RealEstateOverView();
-        module.display(window, scene);
-    }
-
-    private void goToToDoListModule() {
-        ToDoListOverview module = new ToDoListOverview();
-        module.display(window, scene);
-    }
 }

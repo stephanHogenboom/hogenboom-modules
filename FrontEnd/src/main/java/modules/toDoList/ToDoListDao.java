@@ -28,6 +28,20 @@ public class ToDoListDao extends GeneralDAO {
         return false;
     }
 
+    public void updateTask(Task task) throws SQLException {
+        String sql = "UPDATE task SET date_of_completion =  ? where id = ?;";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, LocalDate.now().toString());
+            statement.setLong(2, task.getOid());
+            statement.execute();
+        } catch (SQLException e) {
+            System.out.println("error = " + e.getMessage());
+            throw new SQLException(e);
+        }
+    }
+
+
+
     public List<Task> getTasks() {
         List<Task> tasks = new ArrayList<>();
         String sql = "SELECT * FROM task";

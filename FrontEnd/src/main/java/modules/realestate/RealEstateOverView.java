@@ -3,7 +3,6 @@ package modules.realestate;
 import elements.AlertBox;
 import elements.ConfirmationBox;
 import javafx.geometry.Insets;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -11,7 +10,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import modules.Module;
 import modules.realestate.model.Address;
 import modules.realestate.model.Addressee;
@@ -25,8 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class RealEstateOverView extends Module {
-    private Stage window;
-    private final Button returnButton = new Button("return");
     private TableView<String> propertyInformationTable;
     private final HashMap<String, Addressee> addressees = new HashMap<>();
     private final RealEstateDAO dao = new RealEstateDAO();
@@ -35,11 +31,7 @@ public class RealEstateOverView extends Module {
     private Label houseName, askingPrice, sellPrice, emailOfAddressee, numberOfAddressee, nameOfAddressee;
     private PropertyEntry selectedEntry = new PropertyEntry();
 
-    public void display(Stage primaryStage, Scene previousScene) {
-        window = primaryStage;
-        window.setTitle("Real Estate module");
-        window.setMinWidth(800);
-        window.setMinHeight(500);
+    public BorderPane initRealEstateModule() {
 
         //Adding centre content
         HBox centre = new HBox();
@@ -176,19 +168,11 @@ public class RealEstateOverView extends Module {
         buttonBar.getButtons().addAll(addButton, deleteButton, copyButton, infoButton);
         propertyListContainer.getChildren().addAll(propertyList, buttonBar);
 
-        returnButton.setOnAction(e -> window.setScene(previousScene));
-        ButtonBar bottomButtonBar = new ButtonBar();
-        bottomButtonBar.getButtons().addAll(returnButton);
-
         //add BorderPane for layout
         BorderPane layout = new BorderPane();
         layout.setCenter(centre);
         layout.setLeft(propertyListContainer);
-        layout.setBottom(bottomButtonBar);
-        Scene scene = new Scene(layout);
-        scene.getStylesheets().addAll("index.css");
-        window.setScene(scene);
-        window.show();
+        return layout;
     }
 
     private void setPropertyListAndEntriesAndAddressees(ListView<String> propertyList) {
