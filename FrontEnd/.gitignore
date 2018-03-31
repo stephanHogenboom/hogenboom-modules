@@ -12,6 +12,10 @@ idea/vcs.xml
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/dictionaries
+.idea/compiler.xml
+
+
+*.csv
 
 # Sensitive or high-churn files:
 .idea/**/dataSources/
