@@ -5,9 +5,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import modules.Module;
+import util.ExcelService;
 import util.Validator;
 
 import java.time.LocalDate;
@@ -19,6 +19,8 @@ public class ToDoListOverview extends Module {
     private Validator validator = new Validator();
     private final ObservableList<Task> tasks = FXCollections.observableArrayList();
     private final ToDoListDao dao = new ToDoListDao();
+    private final ExcelService excelService = new ExcelService();
+    private final Button exportButton = new Button("export");
 
     public BorderPane display() {
         ButtonBar buttonBar = new ButtonBar();
@@ -31,6 +33,7 @@ public class ToDoListOverview extends Module {
         addTaskButton.setOnAction(e -> addTask());
         Button completeButton = new Button("complete");
         completeButton.setOnAction(e -> completeTask(table.getSelectionModel().getSelectedItem()));
+        exportButton.setOnAction(e -> toExcell());
 
         Button deleteButton = new Button("Delete");
         deleteButton.setOnAction(e -> {
@@ -38,15 +41,10 @@ public class ToDoListOverview extends Module {
             table.setItems(getTasks());
         });
 
-        HBox fieldsAndAddButton = new HBox();
-        fieldsAndAddButton.getChildren().addAll(nameTextField, effortTextField);
-
         VBox centreDivider = new VBox();
 
-
-
-        buttonBar.getButtons().addAll(addTaskButton, deleteButton, completeButton);
-        centreDivider.getChildren().addAll(table, fieldsAndAddButton, buttonBar);
+        buttonBar.getButtons().addAll(nameTextField, effortTextField, addTaskButton, deleteButton, completeButton, exportButton);
+        centreDivider.getChildren().addAll(table, buttonBar);
 
 
         BorderPane mainlayout = new BorderPane();
@@ -54,6 +52,10 @@ public class ToDoListOverview extends Module {
         mainlayout.setCenter(centreDivider);
 
         return mainlayout;
+    }
+
+    private void toExcell() {
+        excelService.toExcell(getTasks(), "tasks.csv");
     }
 
     private void setUpTable() {
@@ -85,7 +87,6 @@ public class ToDoListOverview extends Module {
 
     }
 
-
     private void addTask() {
         String nameText = nameTextField.getText();
         if (effortTextField.getText() == null || effortTextField.getText().trim().isEmpty() || !validator.isNumeric(effortTextField.getText())) {
@@ -96,7 +97,6 @@ public class ToDoListOverview extends Module {
         Task task = new Task(0, nameText, effortInt, LocalDate.now(), null);
         dao.InsertTask(task);
         table.setItems(getTasks());
-
     }
 
 }
